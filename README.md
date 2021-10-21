@@ -9,7 +9,7 @@ Agora, além de pesquisar as disciplinas e classificá-las como Penosas ou Melzi
 * __Banco de Dados__: PostgreSQL
 * __Backend__: Python (Flask)
 
-### Integrantes da Primeira Versão:
+### Integrantes:
 * Nathan Nogueira
 * Wesley Paulino Fernandes Maciel
 * Felipe Seppe de Faria
