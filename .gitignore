@@ -1,3 +1,10 @@
+.vscode/
 __pycache__/
 node_modules/
 frontend/templates/
+flask_session/
+
+.env
+
+frontend/.env.development
+frontend/.env.production
