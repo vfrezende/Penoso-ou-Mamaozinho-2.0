@@ -1,23 +1,17 @@
 import os
 from tests.config import CONFIG_TEST
+from dotenv import load_dotenv
+
+
+load_dotenv()
+
 
 def getConfig():
     conf = {}
 
-    WINDOWS_HOST_IP = '192.168.208.1'
-
-    mysql_config = {
-        'MYSQL_HOST': WINDOWS_HOST_IP,
-        'MYSQL_USER': 'root',
-        'MYSQL_PASSWORD': 'jujuba',
-        'MYSQL_DB': 'teste',
-        'MYSQL_CURSORCLASS': 'DictCursor'
-    }
-
-    conf['SECRET_KEY'] = 'secret123'
-    conf['SESSION_TYPE'] = 'filesystem'
-
-    conf.update(mysql_config)
+    conf['SECRET_KEY'] = os.getenv('SECRET_KEY')
+    conf['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_CONNECTION_URI')
+    conf['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     return conf
 
