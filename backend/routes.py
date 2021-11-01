@@ -1,38 +1,51 @@
-from backend import app, mysql
-from backend.utils import RegisterForm
+from backend import app
 from backend.utils import success_response, error_response
-from backend.api import cadastroComentario, cadastroUsuario, cadastroDisciplina, cadastroLink, cadastroAvaliacaoDisciplina, cadastroAvaliacaoComentario
-from backend.api import getDisciplina, getDisciplinas, getLinks, getComentarios, checkUsuario, getTopDisciplinas
+from backend.api import (
+    cadastroComentario,
+    cadastroUsuario,
+    cadastroDisciplina,
+    cadastroLink,
+    cadastroAvaliacaoDisciplina,
+    cadastroAvaliacaoComentario,
+)
+from backend.api import (
+    getDisciplina,
+    getDisciplinas,
+    getLinks,
+    getComentarios,
+    checkUsuario,
+    getTopDisciplinas,
+)
 
-from passlib.hash import sha256_crypt
-
-from flask import render_template, flash, redirect, url_for, session, request, jsonify
+from flask import render_template, redirect, url_for, session, request, jsonify
 
 
-# 
+#
 from functools import wraps
+
+
 def is_logged_in(f):
     @wraps(f)
     def wrap(*args, **kwargs):
         if 'logged_in' in session:
             return f(*args, **kwargs)
         else:
-            # flash('Please  to view dashboard', 'danger')
             return redirect(url_for('login'))
+
     return wrap
 
 
 # index page
 @app.route('/')
 def index():
-    #create cursor
+    # create cursor
     return redirect(url_for('home'))
 
 
 # Home page
 @app.route('/home')
 def home():
-    #create cursor
+    # create cursor
     return render_template('home.html')
 
 
@@ -68,6 +81,8 @@ def logout():
 #  Informacao sobre o usuario da sessao atual
 @app.route('/api/usuario', methods=['GET', 'POST'])
 def apiUsuario():
+    print(session)
+
     logged_in = session.get('logged_in')
 
     if logged_in:
@@ -75,7 +90,7 @@ def apiUsuario():
             "username": session.get('username'),
             "name": session.get('name'),
             "email": session.get('email'),
-            "profile_picture": session.get('profile_picture')
+            "profile_picture": session.get('profile_picture'),
         }
         return success_response(data)
     else:
@@ -110,7 +125,8 @@ def apiLogout():
     return success_response()
 
 
-# gera lista das disciplinas junto do numero de comentarios, votos de mamao e de penoso
+#               gera lista das disciplinas                  #
+# com as respectivas contagens de comentarios e avaliacoes  #
 @app.route('/api/disciplinas')
 def apiDisciplinas():
     r = getDisciplinas()
@@ -221,7 +237,11 @@ def apiCadastroAvaliacaoDisciplina():
     penoso_mamao = r.get('penoso_mamao')
     id_user = session.get('id')
 
-    success, message = cadastroAvaliacaoDisciplina(penoso_mamao, id_disciplina, id_user)
+    success, message = cadastroAvaliacaoDisciplina(
+        penoso_mamao,
+        id_disciplina,
+        id_user
+    )
 
     if success:
         return success_response()
@@ -239,7 +259,11 @@ def apiCadastroAvaliacaoComentario():
     like_dislike = r.get('like_dislike')
     id_user = session.get('id')
 
-    success, message = cadastroAvaliacaoComentario(id_comentario, like_dislike, id_user)
+    success, message = cadastroAvaliacaoComentario(
+        id_comentario,
+        like_dislike,
+        id_user
+    )
 
     if success:
         return success_response()

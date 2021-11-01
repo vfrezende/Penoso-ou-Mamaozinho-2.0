@@ -1,10 +1,11 @@
 .vscode/
 __pycache__/
 node_modules/
-frontend/templates/
 flask_session/
 
 .env
 
+frontend/templates/
 frontend/.env.development
 frontend/.env.production
+frontend/package-lock.json
