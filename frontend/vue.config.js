@@ -36,6 +36,17 @@ module.exports = {
             // template title tag needs to be <title><%= htmlWebpackPlugin.options.title %></title>
             title: 'Login Page',
         },
+        profile: {
+            // entry for the page
+            entry: 'src/views/profile/profile.js',
+            // the source template
+            template: 'public/profile.html',
+            // output as dist/index.html
+            filename: 'profile.html',
+            // when using title option,
+            // template title tag needs to be <title><%= htmlWebpackPlugin.options.title %></title>
+            title: 'Profile Page',
+        },
         register: {
             // entry for the page
             entry: 'src/views/register/register.js',

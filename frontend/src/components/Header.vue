@@ -24,9 +24,9 @@
 
       <b-nav-item-dropdown v-if="user_data.logged_in" right>
         <template v-slot:button-content>
-        <img class="icon" v-bind:src="user_data.profile_picture" alt="User Icon">
+        <img class="icon" v-bind:src="user_data.picture" alt="User Icon">
         </template>
-        <b-dropdown-item v-bind:href="user_page()">
+        <b-dropdown-item v-bind:href="profile_page()">
           Profile
         </b-dropdown-item>
         <b-dropdown-item href="/logout">Sign Out</b-dropdown-item>
@@ -76,8 +76,8 @@ export default {
     }
   },
   methods: {
-    user_page: function() {
-      return 'usuario/'+this.user_data.username
+    profile_page: function() {
+      return 'profile/'+this.user_data.username
     },
   },
   created() {
