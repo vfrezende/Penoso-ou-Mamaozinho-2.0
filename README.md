@@ -4,8 +4,56 @@ Penoso ou Mamãozinho, voltoou! Agora mais robusto, com mais funcionalidades e m
 
 Agora, além de pesquisar as disciplinas e classificá-las como Penosas ou Melzinho na Chupeta, os estudantes poderão avaliar os professores que ministram as disciplinas, compartilhar arquivos em um espaço reservado para download e upload, mais segurança e personalização do seu perfil, sistema de denúncia de usuários nos comentários visando manter a integridade e respeito do fórum pela sua comunidade, diversas melhorias na interface e disponibilização ao público através do Heroku.
 
-### Backlog do Produto
+### Instalação
 
+1. Clone o repositório e vá à raiz do projeto
+    ```bash
+    git clone https://github.com/vfrezende/Penoso-ou-Mamaozinho-2.0.git
+    cd Penoso-ou-Mamaozinho-2.0
+    ```
+2. Instale as dependências do backend (recomendamos o uso de virtual environments)
+    * Para instalar e ativar um virtual environment.
+        ```bash
+        python3 -m venv $PATH_TO_VENV
+        source $PATH_TO_VENV/bin/activate
+        ```
+    ```bash
+    pip install -r requirements.txt
+    ```
+3. Instale as dependências do frontend.
+    ```bash
+    cd frontend
+    npm install
+    ```
+
+### Variáveis de Ambiente
+1. Na raiz do projeto, rode o comando e altere as variáveis de ambiente necessárias no arquivo ```.env```.
+    ```bash
+    cp .env.example .env
+    ```
+2. Vá até a pasta do frontend, rode o comando e altere as variáveis de ambiente necessárias no arquivo ```.env```.
+    ```bash
+    cd frontend
+    cp .env.example .env
+    ```
+
+### Inicializando o PoM
+
+1. Build o frontend.
+    ```bash
+    cd frontend
+    npm run build
+    ```
+    **Observação:** Para dar manutenção no frontend, pode ser útil fazer uso do comando ``` npm run serve ``` em vez do ``` npm run build ```.
+
+2. Rode o backend (deve estar na raiz do projeto).
+    ```bash
+    flask run
+    ```
+    **Observação:** Para dar manutenção no backend, pode ser adicionar a variável de desenvolvimento ``` export FLASK_ENV=development ```
+
+
+### Backlog do Produto
 
 #### Como um usuário do PoM, eu gostaria de poder fazer o download/upload de arquivos relacionados às disciplinas
 * Inserir nova aba "Arquivos relacionados" no componente `CoursePage`
