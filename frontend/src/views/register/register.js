@@ -6,7 +6,7 @@ Vue.use(BootstrapVue)
 
 import axios from 'axios'
 Vue.prototype.$http = axios
-Vue.prototype.$api_url = 'http://localhost:5000'
+Vue.prototype.$api_url = process.env.VUE_APP_API_HOST
 
 
 import 'bootstrap/dist/css/bootstrap.css'
