@@ -278,3 +278,31 @@ def getTopDisciplinas(n, categoria):
     size = min(n, len(sorted_disciplinas))
 
     return sorted_disciplinas[:size]
+
+
+def deletarComentario(id_comentario, username):
+    
+    try:
+        r = ComentariosInformacoes.query\
+            .filter_by(id_comentario=id_comentario,username = username)\
+            .first()
+
+        if r is None:
+            print('Voce nao escreveu este comentario')
+            return False, 'Voce nao escreveu este comentario'
+
+        else:
+            Gostei.query.filter_by(id_comentario=id_comentario).delete()
+            NaoGostei.query.filter_by(id_comentario=id_comentario).delete()
+
+            comentario = Comentario.query\
+            .filter_by(id=id_comentario).delete()
+            db.session.commit()
+            
+            return True, 'Comentario removido com sucesso'
+
+    except Exception as e:
+        print(e)
+        return False, "ocorreu um erro enquanto processava"
+
+

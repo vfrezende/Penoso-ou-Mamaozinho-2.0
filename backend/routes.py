@@ -7,6 +7,7 @@ from backend.api import (
     cadastroLink,
     cadastroAvaliacaoDisciplina,
     cadastroAvaliacaoComentario,
+    deletarComentario
 )
 from backend.api import (
     getDisciplina,
@@ -265,6 +266,25 @@ def apiCadastroAvaliacaoComentario():
         id_user
     )
 
+    if success:
+        return success_response()
+    else:
+        return error_response(message)
+
+
+@app.route('/api/cadastro/deletar_comentario', methods=['POST'])
+@is_logged_in
+def apiDeletarComentario():
+    r = request.get_json()
+
+    id_comentario = r.get('id_comentario')
+    username = session.get('username')
+    
+    
+    success, message = deletarComentario(
+        id_comentario,
+        username
+    )
     if success:
         return success_response()
     else:
