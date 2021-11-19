@@ -1,0 +1,110 @@
+#!/bin/bash
+
+COMMAND=$1
+APP_BACKEND_DEV_NAME=pom-backend-dev
+APP_FRONTEND_DEV_NAME=pom-frontend-dev
+
+stop-backend() {
+    if [ $1 ]; then
+        echo "Stopping "$APP_BACKEND_DEV_NAME" if it is running"
+    fi
+    if [ "$(docker ps -a | grep $APP_BACKEND_DEV_NAME | grep Up)" ]; then
+        docker stop $APP_BACKEND_DEV_NAME
+        echo "Container stopped"
+    else
+        if [ $1 ]; then
+            echo "Container is not running"
+        fi
+    fi
+}
+
+stop-frontend() {
+    if [ $1 ]; then
+        echo "Stopping "$APP_FRONTEND_DEV_NAME" if it is running"
+    fi
+    if [ "$(docker ps -a | grep $APP_FRONTEND_DEV_NAME | grep Up)" ]; then
+        docker stop $APP_FRONTEND_DEV_NAME
+        echo "Container stopped"
+    else
+        if [ $1 ]; then
+            echo "Container is not running"
+        fi
+    fi
+}
+
+case $COMMAND in
+    build-container-backend | bc-backend)
+        echo $APP_BACKEND_DEV_NAME" - Starting build..."
+        exec docker build \
+                --build-arg USER_ID=$(id -u ${USER}) \
+                --build-arg GROUP_ID=$(id -g ${USER}) \
+                -t $APP_BACKEND_DEV_NAME \
+                -f Dockerfile-backend-dev \
+                . 
+        echo $APP_BACKEND_DEV_NAME" - Build finished"
+        ;;
+    run-backend)
+        stop-backend
+        echo $APP_BACKEND_DEV_NAME" - Starting..."
+        exec docker run \
+                -t \
+                -p 5000:5000 \
+                -v $PWD:/app \
+                --rm \
+                --name=$APP_BACKEND_DEV_NAME \
+                $APP_BACKEND_DEV_NAME \
+                run --host 0.0.0.0 --port 5000
+        ;;
+    stop-backend)
+        stop-backend true
+        ;;
+    build-container-frontend | bc-frontend)
+        echo $APP_FRONTEND_DEV_NAME" - Starting build..."
+        exec docker build \
+                -t $APP_FRONTEND_DEV_NAME \
+                -f Dockerfile-frontend-dev \
+                . 
+        echo $APP_FRONTEND_DEV_NAME" - Build finished"
+        ;;
+    install-frontend)
+        echo $APP_FRONTEND_DEV_NAME" - Installing container dependencies..."
+        exec docker run \
+                -t \
+                -v $PWD:/app \
+                --name=$APP_FRONTEND_DEV_NAME \
+                --rm \
+                $APP_FRONTEND_DEV_NAME \
+                install
+        echo $APP_FRONTEND_DEV_NAME" - Installation finished"
+        ;;
+    build-frontend)
+        echo $APP_FRONTEND_DEV_NAME" - Starting frontend build..."
+        exec docker run \
+                -t \
+                -v $PWD:/app \
+                --rm \
+                --name=$APP_FRONTEND_DEV_NAME \
+                $APP_FRONTEND_DEV_NAME \
+                run build
+        echo $APP_FRONTEND_DEV_NAME" - Frontend build finished"
+        ;;
+    run-frontend)
+        stop-frontend
+        echo $APP_FRONTEND_DEV_NAME" - Starting..."
+        exec docker run \
+                -t \
+                -v $PWD:/app \
+                -p 8080:8080 \
+                --name=$APP_FRONTEND_DEV_NAME \
+                --rm \
+                $APP_FRONTEND_DEV_NAME \
+                run serve
+        ;;
+    stop-frontend)
+        stop-frontend true
+        ;;
+    *)
+        echo "comando desconhecido"
+        exit 1
+        ;;
+esac

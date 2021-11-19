@@ -1,0 +1,33 @@
+FROM python:3.9.0-slim
+
+ARG USER_ID
+ARG GROUP_ID
+
+USER root
+
+RUN groupadd -g ${GROUP_ID} pomuser
+RUN useradd -l -m -u ${USER_ID} -g pomuser pomuser
+
+RUN apt update && apt install build-essential libpq-dev -y
+
+RUN mkdir app
+
+RUN chown --changes --silent --no-dereference --recursive \
+          --from=33:33 ${USER_ID}:${GROUP_ID} \
+          /home/pomuser \
+          /app
+
+USER pomuser
+
+ENV FLASK_ENV development
+
+COPY ./requirements.txt ./app/
+RUN pip install --no-cache-dir -r app/requirements.txt
+
+WORKDIR /app
+
+ENV PATH /home/pomuser/.local/bin:$PATH
+
+CMD ["run", "--host", "0.0.0.0"]
+
+ENTRYPOINT ["flask"]

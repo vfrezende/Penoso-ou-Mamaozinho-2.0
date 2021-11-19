@@ -6,24 +6,42 @@ Agora, além de pesquisar as disciplinas e classificá-las como Penosas ou Melzi
 
 ### Instalação
 
+* Pode ser necessário conceder permissão de execução do script `pom`.
+    ```bash
+    chmod +x pom
+    ```
+
 1. Clone o repositório e vá à raiz do projeto
     ```bash
     git clone https://github.com/vfrezende/Penoso-ou-Mamaozinho-2.0.git
     cd Penoso-ou-Mamaozinho-2.0
     ```
-2. Instale as dependências do backend (recomendamos o uso de virtual environments)
-    * Para instalar e ativar um virtual environment.
-        ```bash
-        python3 -m venv $PATH_TO_VENV
-        source $PATH_TO_VENV/bin/activate
-        ```
+2. Build as imagens dos containers
     ```bash
-    pip install -r requirements.txt
+    ./pom build-container-frontend
+    ./pom build-container-backend
     ```
 3. Instale as dependências do frontend.
     ```bash
-    cd frontend
-    npm install
+    ./pom install-frontend
+    ```
+
+### Execução
+
+#### Frontend
+* Para executar o frontend em modo desenvolvimento (irá executar `npm run serve`), rode:
+    ```bash
+    ./pom run-frontend
+    ```
+* Caso deseje buildar o frontend (irá executar `npm run build`), rode:
+    ```bash
+    ./pom build-frontend
+    ```
+
+#### Backend
+* Para executar o backend, rode:
+    ```bash
+    ./pom run-backend
     ```
 
 ### Variáveis de Ambiente
@@ -34,24 +52,9 @@ Agora, além de pesquisar as disciplinas e classificá-las como Penosas ou Melzi
 2. Vá até a pasta do frontend, rode o comando e altere as variáveis de ambiente necessárias no arquivo ```.env```.
     ```bash
     cd frontend
-    cp .env.example .env
+    cp .env.example .env.development
+    cp .env.example .env.production
     ```
-
-### Inicializando o PoM
-
-1. Build o frontend.
-    ```bash
-    cd frontend
-    npm run build
-    ```
-    **Observação:** Para dar manutenção no frontend, pode ser útil fazer uso do comando ``` npm run serve ``` em vez do ``` npm run build ```.
-
-2. Rode o backend (deve estar na raiz do projeto).
-    ```bash
-    flask run
-    ```
-    **Observação:** Para dar manutenção no backend, pode ser adicionar a variável de desenvolvimento ``` export FLASK_ENV=development ```
-
 
 ### Backlog do Produto
 
