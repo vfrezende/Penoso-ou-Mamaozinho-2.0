@@ -27,9 +27,7 @@ def getDisciplinas():
 
 def getDisciplina(id_disciplina=None):
     if id_disciplina:
-        disciplina = DisciplinasInformacoes.query \
-            .filter_by(id=id_disciplina) \
-            .first()
+        disciplina = DisciplinasInformacoes.query.filter_by(id=id_disciplina).first()
         if disciplina:
             value = disciplina.serialize()
         else:
@@ -37,37 +35,28 @@ def getDisciplina(id_disciplina=None):
     else:
         disciplinas = Disciplinas.query.all()
         sort_disciplinas = sorted(
-            [d.serialize() for d in disciplinas],
-            key=lambda x: x['nome']
+            [d.serialize() for d in disciplinas], key=lambda x: x["nome"]
         )
         value = sort_disciplinas
     return value
 
 
 def cadastroUsuario(data):
-    name = data.get('name')
-    email = data.get('email')
-    username = data.get('username')
-    picture = data.get('picture', '')
-    password = sha256_crypt.encrypt(str(data.get('password')))
+    name = data.get("name")
+    email = data.get("email")
+    username = data.get("username")
+    picture = data.get("picture", "")
+    password = sha256_crypt.encrypt(str(data.get("password")))
 
-    r = Users.query \
-        .filter_by(username=username) \
-        .first()
+    r = Users.query.filter_by(username=username).first()
     if r:
-        return False, 'Username já cadastrado'
-    r = Users.query \
-        .filter_by(email=email) \
-        .first()
+        return False, "Username já cadastrado"
+    r = Users.query.filter_by(email=email).first()
     if r:
-        return False, 'Email já cadastrado'
+        return False, "Email já cadastrado"
 
     novo_usuario = Users(
-        name=name,
-        email=email,
-        username=username,
-        picture=picture,
-        password=password
+        name=name, email=email, username=username, picture=picture, password=password
     )
     db.session.add(novo_usuario)
     db.session.commit()
@@ -75,16 +64,14 @@ def cadastroUsuario(data):
 
 
 def checkUsuario(username, passwordEntered):
-    r = Users.query. \
-        filter_by(username=username) \
-        .first()
+    r = Users.query.filter_by(username=username).first()
 
     if r:
         correctPassword = r.password
         # compare hash with entered hash
         if sha256_crypt.verify(passwordEntered, correctPassword):
             data = r.serialize()
-            data['password'] = ''
+            data["password"] = ""
             return True, data
 
     return False, None
@@ -93,22 +80,16 @@ def checkUsuario(username, passwordEntered):
 def cadastroAvaliacaoDisciplina(categoria, id_disciplina, id_user):
     try:
         id_user = int(id_user)
-        r = AvaliacoesDisciplinas.query \
-            .filter_by(id_disciplina=id_disciplina, id_user=id_user) \
-            .first()
+        r = AvaliacoesDisciplinas.query.filter_by(
+            id_disciplina=id_disciplina, id_user=id_user
+        ).first()
         if r:
-            return False, 'Voce ja avaliou essa disciplina'
+            return False, "Voce ja avaliou essa disciplina"
 
-        if categoria == 'mamao':
-            nova_avaliacao = Mamao(
-                id_disciplina=id_disciplina,
-                id_user=id_user
-            )
+        if categoria == "mamao":
+            nova_avaliacao = Mamao(id_disciplina=id_disciplina, id_user=id_user)
         else:
-            nova_avaliacao = Penoso(
-                id_disciplina=id_disciplina,
-                id_user=id_user
-            )
+            nova_avaliacao = Penoso(id_disciplina=id_disciplina, id_user=id_user)
 
         db.session.add(nova_avaliacao)
         db.session.commit()
@@ -122,22 +103,16 @@ def cadastroAvaliacaoDisciplina(categoria, id_disciplina, id_user):
 def cadastroAvaliacaoComentario(id_comentario, categoria, id_user):
     try:
         id_user = int(id_user)
-        r = AvaliacoesComentario.query \
-            .filter_by(id_comentario=id_comentario, id_user=id_user) \
-            .first()
+        r = AvaliacoesComentario.query.filter_by(
+            id_comentario=id_comentario, id_user=id_user
+        ).first()
         if r:
-            return False, 'Voce ja avaliou esse comentario'
+            return False, "Voce ja avaliou esse comentario"
 
-        if categoria == 'gostei':
-            nova_avaliacao = Gostei(
-                id_comentario=id_comentario,
-                id_user=id_user
-            )
+        if categoria == "gostei":
+            nova_avaliacao = Gostei(id_comentario=id_comentario, id_user=id_user)
         else:
-            nova_avaliacao = NaoGostei(
-                id_comentario=id_comentario,
-                id_user=id_user
-            )
+            nova_avaliacao = NaoGostei(id_comentario=id_comentario, id_user=id_user)
 
         db.session.add(nova_avaliacao)
         db.session.commit()
@@ -150,27 +125,17 @@ def cadastroAvaliacaoComentario(id_comentario, categoria, id_user):
 
 def cadastroDisciplina(nome, penoso_mamao, id_user):
     try:
-        nome_limpo = ' '.join([sanitizeString(x) for x in nome.split(' ')])
+        nome_limpo = " ".join([sanitizeString(x) for x in nome.split(" ")])
         id_user = int(id_user)
 
-        r = Disciplinas.query \
-            .filter_by(nome_limpo=nome_limpo) \
-            .first()
+        r = Disciplinas.query.filter_by(nome_limpo=nome_limpo).first()
         if r:
-            return False, 'Disciplina ja cadastrada'
+            return False, "Disciplina ja cadastrada"
 
-        nova_disciplina = Disciplinas(
-            id_user=id_user,
-            nome=nome,
-            nome_limpo=nome_limpo
-        )
+        nova_disciplina = Disciplinas(id_user=id_user, nome=nome, nome_limpo=nome_limpo)
         db.session.add(nova_disciplina)
         db.session.commit()
-        return cadastroAvaliacaoDisciplina(
-            penoso_mamao,
-            nova_disciplina.id,
-            id_user
-        )
+        return cadastroAvaliacaoDisciplina(penoso_mamao, nova_disciplina.id, id_user)
 
     except Exception as e:
         print(e)
@@ -181,9 +146,7 @@ def cadastroComentario(id_user, id_disciplina, texto):
     try:
         id_user = int(id_user)
         novo_comentario = Comentario(
-            id_user=id_user,
-            id_disciplina=id_disciplina,
-            texto=texto
+            id_user=id_user, id_disciplina=id_disciplina, texto=texto
         )
         db.session.add(novo_comentario)
         db.session.commit()
@@ -198,10 +161,7 @@ def cadastroLink(id_user, id_disciplina, titulo, link):
     try:
         id_user = int(id_user)
         novo_link = Links(
-            id_user=id_user,
-            id_disciplina=id_disciplina,
-            titulo=titulo,
-            link=link
+            id_user=id_user, id_disciplina=id_disciplina, titulo=titulo, link=link
         )
         db.session.add(novo_link)
         db.session.commit()
@@ -214,16 +174,15 @@ def cadastroLink(id_user, id_disciplina, titulo, link):
 
 def getComentarios(id_disciplina=None):
     if id_disciplina:
-        comentarios = ComentariosInformacoes.query \
-            .filter_by(id_disciplina=id_disciplina) \
-            .all()
+        comentarios = ComentariosInformacoes.query.filter_by(
+            id_disciplina=id_disciplina
+        ).all()
     else:
         comentarios = ComentariosInformacoes.query.all()
 
     if comentarios:
         sort_comentarios = sorted(
-            [c.serialize() for c in comentarios],
-            key=lambda x: x['id_comentario']
+            [c.serialize() for c in comentarios], key=lambda x: x["id_comentario"]
         )
         value = sort_comentarios
     else:
@@ -234,16 +193,13 @@ def getComentarios(id_disciplina=None):
 
 def getLinks(id_disciplina=None):
     if id_disciplina:
-        links = LinksInformacoes.query \
-            .filter_by(id_disciplina=id_disciplina) \
-            .all()
+        links = LinksInformacoes.query.filter_by(id_disciplina=id_disciplina).all()
     else:
         links = ComentariosInformacoes.query.all()
 
     if links:
         sorted_links = sorted(
-            [link.serialize() for link in links],
-            key=lambda x: x['id_link']
+            [link.serialize() for link in links], key=lambda x: x["id_link"]
         )
         value = sorted_links
     else:
@@ -253,7 +209,7 @@ def getLinks(id_disciplina=None):
 
 
 def getTopDisciplinas(n, categoria):
-    TIPOS = ['mamao', 'penoso']
+    TIPOS = ["mamao", "penoso"]
 
     disciplinas = DisciplinasInformacoes.query.all()
     disciplinas = [d.serialize() for d in disciplinas]
@@ -262,18 +218,14 @@ def getTopDisciplinas(n, categoria):
         return {}
 
     for disciplina in disciplinas:
-        disciplina['razao'] = disciplina['num_mamao'] \
-            / (disciplina['num_mamao'] + disciplina['num_penoso'])
-        disciplina['num_votos'] = disciplina['num_mamao'] \
-            + disciplina['num_penoso']
+        disciplina["razao"] = disciplina["num_mamao"] / (
+            disciplina["num_mamao"] + disciplina["num_penoso"]
+        )
+        disciplina["num_votos"] = disciplina["num_mamao"] + disciplina["num_penoso"]
 
-    reverse = True if categoria == 'mamao' else False
+    reverse = True if categoria == "mamao" else False
 
-    sorted_disciplinas = sorted(
-        disciplinas,
-        key=lambda x: x['razao'],
-        reverse=reverse
-    )
+    sorted_disciplinas = sorted(disciplinas, key=lambda x: x["razao"], reverse=reverse)
 
     size = min(n, len(sorted_disciplinas))
 
@@ -281,28 +233,25 @@ def getTopDisciplinas(n, categoria):
 
 
 def deletarComentario(id_comentario, username):
-    
+
     try:
-        r = ComentariosInformacoes.query\
-            .filter_by(id_comentario=id_comentario,username = username)\
-            .first()
+        r = ComentariosInformacoes.query.filter_by(
+            id_comentario=id_comentario, username=username
+        ).first()
 
         if r is None:
-            print('Voce nao escreveu este comentario')
-            return False, 'Voce nao escreveu este comentario'
+            print("Voce nao escreveu este comentario")
+            return False, "Voce nao escreveu este comentario"
 
         else:
             Gostei.query.filter_by(id_comentario=id_comentario).delete()
             NaoGostei.query.filter_by(id_comentario=id_comentario).delete()
 
-            comentario = Comentario.query\
-            .filter_by(id=id_comentario).delete()
+            Comentario.query.filter_by(id=id_comentario).delete()
             db.session.commit()
-            
-            return True, 'Comentario removido com sucesso'
+
+            return True, "Comentario removido com sucesso"
 
     except Exception as e:
         print(e)
         return False, "ocorreu um erro enquanto processava"
-
-
