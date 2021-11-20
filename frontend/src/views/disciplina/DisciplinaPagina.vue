@@ -40,7 +40,7 @@
           <div v-else>
             <b-button pill variant="success" class="btn text-center" @click="adicionar_comentario = !adicionar_comentario">Adicionar comentário</b-button>
           </div>
-          
+
           <div class="comment_form" v-show="adicionar_comentario">
             <b-form-textarea
               id="textarea"
@@ -51,7 +51,7 @@
             ></b-form-textarea>
           </div>
         </div>
-        <CommentBox 
+        <CommentBox
           v-for="comment in comments"
           v-bind:key="comment.id_comentario"
           v-bind:id="comment.id_comentario"
@@ -72,7 +72,7 @@
           <div v-else>
             <b-button pill variant="success" class="btn text-center" @click="adicionar_link = !adicionar_link">Adicionar link</b-button>
           </div>
-          
+
           <div class="comment_form" v-show="adicionar_link">
             <label for="link_titulo">Titulo</label>
             <b-form-input
@@ -95,7 +95,7 @@
             ></b-form-input>
           </div>
         </div>
-        <LinkBox 
+        <LinkBox
           v-for="link in links"
           v-bind:key="link.id_comentario"
           v-bind:name="link.username"
@@ -146,97 +146,92 @@ export default {
     }
   },
   methods: {
-    cadastrar_comentario: function(e) {
-      e.preventDefault();
-      if(!this.comentario) {
-        this.comentario_erro = "Escreva seu comentário!"
-      }
-      else {
-        this.$http.post(this.$api_url+'/api/cadastro/comentario', {
+    cadastrar_comentario: function (e) {
+      e.preventDefault()
+      if (!this.comentario) {
+        this.comentario_erro = 'Escreva seu comentário!'
+      } else {
+        this.$http.post(this.$api_url + '/api/cadastro/comentario', {
           id_disciplina: this.id_disciplina,
           comentario: this.comentario
         })
-        .then(response => {
-           if(response.data.status === 'error'){
-            this.comentario_erro = response.data.message
-          }
-          else {
-            this.comentario = ''
-            this.adicionar_comentario = false
-            this.get_comentarios()
-          }
-        })
+          .then(response => {
+            if (response.data.status === 'error') {
+              this.comentario_erro = response.data.message
+            } else {
+              this.comentario = ''
+              this.adicionar_comentario = false
+              this.get_comentarios()
+            }
+          })
       }
     },
-    cadastrar_link: function(e) {
-      e.preventDefault();
-      if(!this.link_url | !this.link_titulo) {
-        this.link_erro = "Escreva seu titulo e a url!"
-      }
-      else {
-        this.$http.post(this.$api_url+'/api/cadastro/link', {
+    cadastrar_link: function (e) {
+      e.preventDefault()
+      if (!this.link_url | !this.link_titulo) {
+        this.link_erro = 'Escreva seu titulo e a url!'
+      } else {
+        this.$http.post(this.$api_url + '/api/cadastro/link', {
           id_disciplina: this.id_disciplina,
           titulo: this.link_titulo,
           link: this.link_url
         })
-        .then(response => {
-           if(response.data.status === 'error'){
-            this.link_erro = response.data.message
-          }
-          else {
-            this.link_titulo = ''
-            this.link_url = ''
-            this.adicionar_link = false
-            this.get_links()
-          }
-        })
+          .then(response => {
+            if (response.data.status === 'error') {
+              this.link_erro = response.data.message
+            } else {
+              this.link_titulo = ''
+              this.link_url = ''
+              this.adicionar_link = false
+              this.get_links()
+            }
+          })
       }
     },
-    get_comentarios: function() {
-      this.$http.get(this.$api_url+'/api/comentarios/' + this.id_disciplina)
-      .then(response => {
-        this.comments = response.data
-      })
+    get_comentarios: function () {
+      this.$http.get(this.$api_url + '/api/comentarios/' + this.id_disciplina)
+        .then(response => {
+          this.comments = response.data
+        })
     },
-    get_links: function() {
+    get_links: function () {
       this.$http.get(this.$api_url + '/api/links/' + this.id_disciplina)
-      .then(response => {
-        this.links = response.data
-      })
+        .then(response => {
+          this.links = response.data
+        })
     },
-    get_disciplina: function() {
+    get_disciplina: function () {
       this.$http.get(this.$api_url + '/api/disciplina/' + this.id_disciplina)
-      .then(response => {
-        this.disciplina = response.data
-      })
+        .then(response => {
+          this.disciplina = response.data
+        })
     }
   },
   watch: {
-    selected: function(){
+    selected: function () {
       this.$http.post(this.$api_url + '/api/cadastro/avaliacao_disciplina', {
         id_disciplina: this.id_disciplina,
         penoso_mamao: this.selected
       })
-      .then(response => {
-        if(response.data.status === 'error'){
-          this.avaliacao_erro = response.data.message
-        }
-        else {
-          this.get_disciplina()
-        }
-      })
+        .then(response => {
+          if (response.data.status === 'error') {
+            this.avaliacao_erro = response.data.message
+          } else {
+            this.get_disciplina()
+          }
+        })
     },
-    disciplina: function() {
-      this.val_penoso = (this.disciplina.num_penoso/(this.disciplina.num_mamao + this.disciplina.num_penoso)).toFixed(2)*100
+    disciplina: function () {
+      this.val_penoso = (this.disciplina.num_penoso / (this.disciplina.num_mamao + this.disciplina.num_penoso)).toFixed(2) * 100
       this.val_mamao = 100 - this.val_penoso
     }
   },
-  created() {
+  created () {
     this.id_disciplina = window.location.href.split('/').pop()
     this.get_disciplina()
     this.get_comentarios()
     this.get_links()
-  },
+  }
 }
 </script>
 

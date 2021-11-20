@@ -8,7 +8,7 @@
         <div class="block1">
             <h2>
                 <a v-bind:href="url_disciplina+primeiro_lugar.id">
-                    {{primeiro_lugar.nome}}    
+                    {{primeiro_lugar.nome}}
                 </a>
             </h2>
             <p><strong>Nota</strong></p>
@@ -34,7 +34,7 @@
         <div class="block1">
             <h2>
                 <a v-bind:href="url_disciplina+segundo_lugar.id">
-                    {{segundo_lugar.nome}}    
+                    {{segundo_lugar.nome}}
                 </a>
             </h2>
             <p><strong>Nota</strong></p>
@@ -53,8 +53,6 @@
         </div>
     </div>
 
-    
-
     <div :class="class3">
         <div class="header">
             <h3>Terceiro Lugar</h3>
@@ -62,7 +60,7 @@
         <div class="block1">
             <h2>
                 <a v-bind:href="url_disciplina+terceiro_lugar.id">
-                    {{terceiro_lugar.nome}}    
+                    {{terceiro_lugar.nome}}
                 </a>
             </h2>
             <p><strong>Nota</strong></p>
@@ -85,37 +83,37 @@
 
 <script>
 export default {
-    data: function() {
-        return {
-            class2: "col-sm-4 ranking r2 animated ",
-            class3: "col-sm-4 ranking r3 animated ",
-            class1: "col-sm-4 ranking r1 animated first ",
-            ready: false,
-            url_disciplina: "/disciplina/"
-        }
-    },
-    props: {
-        primeiro_lugar: Object,
-        segundo_lugar: Object,
-        terceiro_lugar: Object
-    },
-    methods: {
-    },
-    mounted: function() {
-        let time = 300
-        setTimeout( ()=>{
-            this.ready = true
-        }, time);
-        setTimeout( ()=>{
-            this.class2 += "slideInUp"
-        }, time);
-        setTimeout( ()=>{
-            this.class3 += "slideInUp"
-        }, time*2);
-        setTimeout( ()=>{
-            this.class1 += "slideInUp"
-        }, time*3);
+  data: function () {
+    return {
+      class2: 'col-sm-4 ranking r2 animated ',
+      class3: 'col-sm-4 ranking r3 animated ',
+      class1: 'col-sm-4 ranking r1 animated first ',
+      ready: false,
+      url_disciplina: '/disciplina/'
     }
+  },
+  props: {
+    primeiro_lugar: Object,
+    segundo_lugar: Object,
+    terceiro_lugar: Object
+  },
+  methods: {
+  },
+  mounted: function () {
+    const time = 300
+    setTimeout(() => {
+      this.ready = true
+    }, time)
+    setTimeout(() => {
+      this.class2 += 'slideInUp'
+    }, time)
+    setTimeout(() => {
+      this.class3 += 'slideInUp'
+    }, time * 2)
+    setTimeout(() => {
+      this.class1 += 'slideInUp'
+    }, time * 3)
+  }
 }
 </script>
 

@@ -5,14 +5,14 @@
       <h2><b-badge>TOP 3</b-badge> Penosas e Mamaozinhas </h2>
       <b-tabs>
         <b-tab title="Penosas pra ca#$!" active>
-          <RankingCourses 
+          <RankingCourses
             :primeiro_lugar="top_penoso[0]"
             :segundo_lugar="top_penoso[1]"
             :terceiro_lugar="top_penoso[2]"
           />
         </b-tab>
         <b-tab title="Melzinho na chupeta">
-          <RankingCourses 
+          <RankingCourses
             :primeiro_lugar="top_mamao[0]"
             :segundo_lugar="top_mamao[1]"
             :terceiro_lugar="top_mamao[2]"
@@ -33,25 +33,25 @@ export default {
     RankingCourses,
     Header
   },
-  data() {
+  data () {
     return {
       top_mamao: '',
       top_penoso: ''
     }
-  }, 
-  created() {
-    this.$http.get(this.$api_url+'/api/disciplinas/top/3/mamao', {})
-    .then(response => {
-      if(response.data) {
-        this.top_mamao = response.data
-      }
-    })
-    this.$http.get(this.$api_url+'/api/disciplinas/top/3/penoso', {})
-    .then(response => {
-      if(response.data) {
-        this.top_penoso = response.data
-      }
-    })
+  },
+  created () {
+    this.$http.get(this.$api_url + '/api/disciplinas/top/3/mamao', {})
+      .then(response => {
+        if (response.data) {
+          this.top_mamao = response.data
+        }
+      })
+    this.$http.get(this.$api_url + '/api/disciplinas/top/3/penoso', {})
+      .then(response => {
+        if (response.data) {
+          this.top_penoso = response.data
+        }
+      })
   }
 }
 </script>

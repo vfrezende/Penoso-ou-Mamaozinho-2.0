@@ -25,65 +25,70 @@
 
 <script>
 export default {
-    data: function() {
-        return {
-          count: 0,
-          likesValue: this.likes,
-          dislikesValue: this.dislikes
-        }
-    },
-    props: {
-        name: String,
-        comment: String,
-        picture: String,
-        likes: Number,
-        dislikes: Number,
-        id: Number
-    },
-    methods: {
-      countLike: function() {
-        this.$http.post(this.$api_url + '/api/cadastro/avaliacao_comentario', {
-          id_comentario: this.id,
-          like_dislike: 'gostei'
-        })
+  data: function () {
+    return {
+      count: 0,
+      likesValue: this.likes,
+      dislikesValue: this.dislikes
+    }
+  },
+  props: {
+    name: String,
+    comment: String,
+    picture: String,
+    likes: Number,
+    dislikes: Number,
+    id: Number
+  },
+  methods: {
+    countLike: function () {
+      this.$http.post(this.$api_url + '/api/cadastro/avaliacao_comentario', {
+        id_comentario: this.id,
+        like_dislike: 'gostei'
+      })
         .then(response => {
-          if(response.data.status == 'success'){
+          if (response.data.status === 'success') {
             this.likesValue += 1
           }
         })
-      },
-      countDislike: function() {
-        this.$http.post(this.$api_url + '/api/cadastro/avaliacao_comentario', {
-          id_comentario: this.id,
-          like_dislike: 'nao_gostei'
-        })
+    },
+    countDislike: function () {
+      this.$http.post(this.$api_url + '/api/cadastro/avaliacao_comentario', {
+        id_comentario: this.id,
+        like_dislike: 'nao_gostei'
+      })
         .then(response => {
-          if(response.data.status == 'success'){
+          if (response.data.status === 'success') {
             this.dislikesValue += 1
           }
         })
-      },
-      deleteComment: function() {
-        
-      this.$swal({title:'Tem certeza de deseja excluir este  comentário',showCancelButton: true,
-        icon: 'question',  confirmButtonText: 'Quero prosseguir',
-        confirmButtonColor: '#3085d6',cancelButtonColor: '#d33',
-        cancelButtonText:"Deixa pra lá"}).then(response =>{
-          if(response.isConfirmed){
-            this.$http.post(this.$api_url + '/api/cadastro/deletar_comentario', {
+    },
+    deleteComment: function () {
+      this.$swal({
+        title: 'Tem certeza de deseja excluir este  comentário',
+        showCancelButton: true,
+        icon: 'question',
+        confirmButtonText: 'Quero prosseguir',
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Deixa pra lá'
+      }).then(response => {
+        if (response.isConfirmed) {
+          this.$http.post(this.$api_url + '/api/cadastro/deletar_comentario', {
             id_comentario: this.id
-            }).then(response => {
-              if(response.data.status == 'success'){
-                location.reload();
-              }else if (response.data.message == 'Voce nao escreveu este comentario'){
-                                  
-                this.$swal({title:'Você não é o autor(a) deste comentário',
-                  icon: 'error',  confirmButtonText: 'Ok',
-                  confirmButtonColor: '#3085d6'
-                }) 
-              }
-            })
-         }
+          }).then(response => {
+            if (response.data.status === 'success') {
+              location.reload()
+            } else if (response.data.message === 'Voce nao escreveu este comentario') {
+              this.$swal({
+                title: 'Você não é o autor(a) deste comentário',
+                icon: 'error',
+                confirmButtonText: 'Ok',
+                confirmButtonColor: '#3085d6'
+              })
+            }
+          })
+        }
       })
     }
   }

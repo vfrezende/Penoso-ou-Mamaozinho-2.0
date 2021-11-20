@@ -17,20 +17,20 @@
 
 <script>
 export default {
-    data: function() {
-        return {
-          count: 0,
-          likesValue: this.likes,
-          dislikesValue: this.dislikes
-        }
-    },
-    props: {
-        name: String,
-        link: String,
-        titulo: String,
-        picture: String,
-        id: Number
+  data: function () {
+    return {
+      count: 0,
+      likesValue: this.likes,
+      dislikesValue: this.dislikes
     }
+  },
+  props: {
+    name: String,
+    link: String,
+    titulo: String,
+    picture: String,
+    id: Number
+  }
 }
 </script>
 

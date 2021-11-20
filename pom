@@ -83,7 +83,6 @@ case $COMMAND in
                 -t \
                 -v $PWD:/app \
                 --rm \
-                --name=$APP_FRONTEND_DEV_NAME \
                 $APP_FRONTEND_DEV_NAME \
                 run build
         echo $APP_FRONTEND_DEV_NAME" - Frontend build finished"
@@ -99,6 +98,16 @@ case $COMMAND in
                 --rm \
                 $APP_FRONTEND_DEV_NAME \
                 run serve
+        ;;
+    run-linter-frontend)
+        stop-frontend
+        echo $APP_FRONTEND_DEV_NAME" - Starting..."
+        exec docker run \
+                -t \
+                -v $PWD:/app \
+                --rm \
+                $APP_FRONTEND_DEV_NAME \
+                run lint
         ;;
     stop-frontend)
         stop-frontend true

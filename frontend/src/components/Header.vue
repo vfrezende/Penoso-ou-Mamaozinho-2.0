@@ -14,7 +14,7 @@
       <a class='add_disciplina' href="/adicionar_disciplina">Adicionar disciplina</a>
 
       <div class="live-search-container">
-        <LiveSearch 
+        <LiveSearch
           :options="disciplinas"
           :placeholder="'Pesquise pelo nome da disciplina'"
         />
@@ -47,25 +47,24 @@
 <script>
 import LiveSearch from './LiveSearch.vue'
 
-
 export default {
   components: {
     LiveSearch
   },
-  data: function() {
+  data: function () {
     return {
       courses: [
-        { 
+        {
           name: 'materia 1',
           id: 1,
           sanitizedName: 'Um belo Nome'
         },
-        { 
+        {
           name: 'materia 2',
           id: 2,
           sanitizedName: 'Essa eh a materia 2e'
         },
-        { 
+        {
           name: 'materia 3',
           id: 3,
           sanitizedName: 'FEIJAOZINHO'
@@ -76,29 +75,28 @@ export default {
     }
   },
   methods: {
-    profile_page: function() {
-      return 'profile/'+this.user_data.username
-    },
+    profile_page: function () {
+      return 'profile/' + this.user_data.username
+    }
   },
-  created() {
-    this.$http.post(this.$api_url+'/api/usuario', {})
-    .then(response => {
-      if(response.data.status == 'success') {
-        this.user_data = response.data
-        this.user_data.logged_in = true
-      }
-      else {
-        this.user_data = {
-          logged_in: false
+  created () {
+    this.$http.post(this.$api_url + '/api/usuario', {})
+      .then(response => {
+        if (response.data.status === 'success') {
+          this.user_data = response.data
+          this.user_data.logged_in = true
+        } else {
+          this.user_data = {
+            logged_in: false
+          }
         }
-      }
-    })
-    this.$http.get(this.$api_url+'/api/disciplinas')
-    .then(response => {
-      if(response.data){
-        this.disciplinas = response.data
-      }
-    })
+      })
+    this.$http.get(this.$api_url + '/api/disciplinas')
+      .then(response => {
+        if (response.data) {
+          this.disciplinas = response.data
+        }
+      })
   }
 }
 </script>

@@ -12,7 +12,7 @@
   <form @submit="validateLogin" class="login-form">
     <input type="text" id="username" v-model="form.username" name="username" placeholder="username" required/>
     <input type="password" id="password" v-model="form.password" name="password" placeholder="password" required/>
-     <input 
+     <input
       class="button"
       type="submit"
       value="Login"
@@ -31,35 +31,34 @@ export default {
     return {
       user_rate: null,
       form: {
-          name: "",
-          email: "",
-          username: "",
-          password: ""
+        name: '',
+        email: '',
+        username: '',
+        password: ''
       },
       error_message: '',
       successfully_registered_message: ''
     }
   },
   methods: {
-    validateLogin: function(e) {
-      e.preventDefault();
+    validateLogin: function (e) {
+      e.preventDefault()
 
-      this.$http.post(this.$api_url+'/api/login', this.form)
-      .then(response => {
-        if(response.data.status == 'success'){
-          window.location.href = '/home'
-        }
-        else{
-          this.error_message = response.data.message
-        }
-      })
-      .catch(error => {
-        this.error_message = error
-      });
+      this.$http.post(this.$api_url + '/api/login', this.form)
+        .then(response => {
+          if (response.data.status === 'success') {
+            window.location.href = '/home'
+          } else {
+            this.error_message = response.data.message
+          }
+        })
+        .catch(error => {
+          this.error_message = error
+        })
     }
   },
-  created() {
-    if(window.location.href.match('successfully_registered')){
+  created () {
+    if (window.location.href.match('successfully_registered')) {
       this.successfully_registered_message = 'Registrado com Sucesso!'
     }
   }

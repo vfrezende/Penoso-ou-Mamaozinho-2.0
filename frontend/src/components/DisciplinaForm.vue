@@ -9,10 +9,10 @@
 <div class="form">
   <div class="thumbnail"><img src="@/assets/images/pom_logo.png"/></div>
   <h4>Adicione uma nova disciplina </h4>
-  <form 
-    id="register" 
-    @submit="register_user" 
-    method="post" 
+  <form
+    id="register"
+    @submit="register_user"
+    method="post"
      class="login-form"
   >
     <input id="nome" v-model="form.nome" name="nome" type="text" placeholder="Nome da disciplina" required/>
@@ -39,32 +39,30 @@ export default {
     return {
       user_rate: null,
       form: {
-          nome: "",
-          penoso_mamao: ""
+        nome: '',
+        penoso_mamao: ''
       },
-      password_confirm: "",
-      error_message: ""
+      password_confirm: '',
+      error_message: ''
     }
   },
   methods: {
-    register_user: function(e) {
-      e.preventDefault();
-      if(this.form.nome.length < 3 || this.form.nome.length > 255 ) {
-        this.error_message = "Nome deve ter pelo menos 3 caracteres e no maximo 255."
+    register_user: function (e) {
+      e.preventDefault()
+      if (this.form.nome.length < 3 || this.form.nome.length > 255) {
+        this.error_message = 'Nome deve ter pelo menos 3 caracteres e no maximo 255.'
         this.form.nome = ''
-      }
-      else {
-        this.$http.post(this.$api_url+'/api/cadastro/disciplina', this.form)
-        .then(response => {
-          if(response.data.status == 'error') {
-            this.error_message = response.data.message
-            this.form.nome = ""
-            this.form.penoso_mamao = ""
-          }
-          else {
-            window.location.href = '/home'
-          }
-        })
+      } else {
+        this.$http.post(this.$api_url + '/api/cadastro/disciplina', this.form)
+          .then(response => {
+            if (response.data.status === 'error') {
+              this.error_message = response.data.message
+              this.form.nome = ''
+              this.form.penoso_mamao = ''
+            } else {
+              window.location.href = '/home'
+            }
+          })
       }
     }
   }

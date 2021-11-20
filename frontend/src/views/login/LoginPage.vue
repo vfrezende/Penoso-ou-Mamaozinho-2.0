@@ -18,13 +18,13 @@ export default {
   data: () => {
     return {}
   },
-  created: function() {
-    this.$http.post(this.$api_url+'/api/usuario', {})
-    .then(response => {
-      if(response.data.status == 'success') {
-        window.location.href = '/home'
-      }
-    })
+  created: function () {
+    this.$http.post(this.$api_url + '/api/usuario', {})
+      .then(response => {
+        if (response.data.status === 'success') {
+          window.location.href = '/home'
+        }
+      })
   }
 }
 </script>

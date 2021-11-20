@@ -23,17 +23,17 @@ export default {
   },
   data: () => {
     return {
-        logged_in: false
+      logged_in: false
     }
   },
-  created: function() {
-    this.$http.post(this.$api_url+'/api/usuario', {})
-    .then(response => {
-      if(response.data.status == 'success') {
-        this.logged_in = true 
-      }
-      this.logged_in = true 
-    })
+  created: function () {
+    this.$http.post(this.$api_url + '/api/usuario', {})
+      .then(response => {
+        if (response.data.status === 'success') {
+          this.logged_in = true
+        }
+        this.logged_in = true
+      })
   }
 }
 </script>
