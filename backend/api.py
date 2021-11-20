@@ -63,18 +63,66 @@ def cadastroUsuario(data):
     return True, None
 
 
-def checkUsuario(username, passwordEntered):
-    r = Users.query.filter_by(username=username).first()
+def getUsuario(**kwargs):
+    message = "user not found"
+    if kwargs.get('user'):
+        user = kwargs.get('user')
+        user_dict = user.serialize()
+        user_dict['password'] = ''
+        return True, user_dict
+    elif kwargs.get('id_user'):
+        id_user = kwargs.get('id_user')
+        user = Users.query \
+            .filter_by(id=id_user) \
+            .first()
+        if user:
+            user_dict = user.serialize()
+            user_dict['password'] = ''
+            return True, user_dict
+        else:
+            return False, message
+    else:
+        return False, message
 
-    if r:
-        correctPassword = r.password
+
+def checkUsuario(username, passwordEntered):
+    user = Users.query. \
+        filter_by(username=username) \
+        .first()
+
+    if user:
+        correctPassword = user.password
         # compare hash with entered hash
         if sha256_crypt.verify(passwordEntered, correctPassword):
-            data = r.serialize()
-            data["password"] = ""
-            return True, data
+            return True, getUsuario(user=user)[1]
 
     return False, None
+
+
+def updateUsuario(id_user, data):
+    name = data.get('name')
+    picture = data.get('picture', '')
+    password = data.get('password')
+
+    new_data = {
+        'name': name,
+        'picture': picture,
+    }
+
+    if password:
+        new_data.update({
+            'password': sha256_crypt.encrypt(str(password))
+        })
+
+    try:
+        Users.query \
+            .filter_by(id=id_user) \
+            .update(new_data)
+        db.session.commit()
+        return True, None
+
+    except Exception as e:
+        return False, str(e)
 
 
 def cadastroAvaliacaoDisciplina(categoria, id_disciplina, id_user):

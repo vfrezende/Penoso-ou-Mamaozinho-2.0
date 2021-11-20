@@ -17,6 +17,15 @@ def error_response(message=''):
     return jsonify({'status': 'error', 'message': message})
 
 
+def update_session(session, user):
+    session['logged_in'] = True
+    session['id'] = user['id']
+    session['username'] = user['username']
+    session['name'] = user['name']
+    session['email'] = user['email']
+    session['picture'] = user['picture']
+
+
 def sanitizeString(string):
     string = re.sub('ª', ' ', string)
     string = re.sub('º', ' ', string)

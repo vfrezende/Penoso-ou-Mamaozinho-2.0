@@ -1,5 +1,5 @@
 from backend import app
-from backend.utils import success_response, error_response
+from backend.utils import success_response, error_response, update_session
 from backend.api import (
     cadastroComentario,
     cadastroUsuario,
@@ -8,6 +8,8 @@ from backend.api import (
     cadastroAvaliacaoDisciplina,
     cadastroAvaliacaoComentario,
     deletarComentario,
+    getUsuario,
+    updateUsuario,
 )
 from backend.api import (
     getDisciplina,
@@ -17,11 +19,14 @@ from backend.api import (
     checkUsuario,
     getTopDisciplinas,
 )
-
-from flask import render_template, redirect, url_for, session, request, jsonify
-
-
-#
+from flask import (
+    render_template,
+    redirect,
+    url_for,
+    session,
+    request,
+    jsonify
+)
 from functools import wraps
 
 
@@ -105,15 +110,10 @@ def apiLogin():
     username = r.get("username")
     password = r.get("password")
 
-    status, data = checkUsuario(username, password)
+    success, user = checkUsuario(username, password)
 
-    if status:
-        session["logged_in"] = True
-        session["id"] = data["id"]
-        session["username"] = username
-        session["name"] = data["name"]
-        session["email"] = data["email"]
-        session["profile_picture"] = data["picture"]
+    if success:
+        update_session(session, user)
         return success_response()
     else:
         return error_response("Usuario e/ou senha incorreta")
@@ -170,6 +170,19 @@ def apiCadastroUsuario():
     success, message = cadastroUsuario(r)
 
     if success:
+        return success_response()
+    else:
+        return error_response(message)
+
+
+@app.route('/api/update/usuario', methods=['POST'])
+def apiUpdateUsuario():
+    r = request.get_json()
+    id_user = session.get('id')
+    success, message = updateUsuario(id_user, r)
+
+    if success:
+        update_session(session, getUsuario(id_user=id_user)[1])
         return success_response()
     else:
         return error_response(message)
