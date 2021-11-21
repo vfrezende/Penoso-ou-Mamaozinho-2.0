@@ -8,7 +8,7 @@
   </div>
 </div>
 <div class="form">
-  <div class="thumbnail"><img v-bind:src="form.picture" alt="No User Icon"/></div>
+  <div class="thumbnail"><img v-bind:src="form.profile_picture" alt="No User Icon"/></div>
   <b-form @submit="updateProfileInfo">
       <b-form-group
         id="input-group-name"
@@ -26,12 +26,12 @@
       <b-form-group
         id="input-group-pic"
         label="Foto do perfil"
-        label-for="input-picture"
+        label-for="input-profile_picture"
         description="Insira a URL da imagem"
       >
         <b-form-input
-          id="input-picture"
-          v-model="form.picture"
+          id="input-profile_picture"
+          v-model="form.profile_picture"
           type="url"
           placeholder="Insira o link"
         ></b-form-input>
@@ -67,20 +67,20 @@ export default {
       error_message: '',
       form: {
         name: '',
-        picture: '',
+        profile_picture: '',
         password: ''
       },
       user_data: {
         email: '',
         name: '',
-        picture: ''
+        profile_picture: ''
       }
     }
   },
   methods: {
     hasDataChanged: function () {
       return this.form.name !== this.user_data.name ||
-             this.form.picture !== this.user_data.picture ||
+             this.form.profile_picture !== this.user_data.profile_picture ||
              this.form.password !== this.empty_password
     },
     updateProfileInfo (event) {
@@ -111,7 +111,7 @@ export default {
     },
     resetProfileInfo () {
       this.form.name = this.user_data.name
-      this.form.picture = this.user_data.picture
+      this.form.profile_picture = this.user_data.profile_picture
       this.form.password = this.empty_password
     },
     getUserData () {

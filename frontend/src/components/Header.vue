@@ -76,7 +76,7 @@ export default {
   },
   methods: {
     profile_page: function () {
-      return 'profile/' + this.user_data.username
+      return '/profile'
     }
   },
   created () {
