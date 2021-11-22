@@ -19,7 +19,7 @@ Agora, além de pesquisar as disciplinas e classificá-las como Penosas ou Melzi
 * 
 ### Instalação
 
-    * Certifique-se que o Docker esteje instalado em sua maquina. Caso não esteja, siga o tutorial abaixo:
+* Certifique-se que o Docker esteje instalado em sua maquina. Caso não esteja, siga o tutorial abaixo:
     ```bash
         https://docs.docker.com/get-docker/
     ```
