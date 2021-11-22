@@ -15,8 +15,7 @@ Agora, além de pesquisar as disciplinas e classificá-las como Penosas ou Melzi
 * Nathan Nogueira
 * Wesley Paulino Fernandes Maciel
 * Felipe Seppe de Faria
-* Vitor Franco Rezende
-* 
+* Vitor Franco Rezende 
 ### Instalação
 
 * Certifique-se que o Docker esteje instalado em sua maquina. Caso não esteja, siga o tutorial abaixo:
