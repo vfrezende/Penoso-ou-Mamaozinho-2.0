@@ -20,18 +20,21 @@
         </b-tab>
       </b-tabs>
     </b-container>
+    <Footer />
   </div>
 </template>
 
 <script>
 import RankingCourses from '@/components/RankingCourses.vue'
 import Header from '@/components/Header.vue'
+import Footer from '@/components/Footer.vue'
 
 export default {
   name: 'HomePage',
   components: {
     RankingCourses,
-    Header
+    Header,
+    Footer
   },
   data () {
     return {

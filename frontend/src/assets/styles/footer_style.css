@@ -1,22 +1,56 @@
-#myFooter{
-    font-family: "Roboto",sans-serif;
-    font-weight: 300;
-    /* bottom: 0 !important; */
-    background: #3e4551;
-    color: rgba(255,255,255,0.6);
-    z-index: 0 !important; 
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+#container{
+  padding-top:20px;
+  margin-top:20px;
+  width:100vw;
+  color:rgba(7, 7, 7, 0.699);
+  background-color:#aca9a9;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
 }
-#myFooter a{
-    color: #fff;
+#contacts{
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  width:100%;
 }
-.footer-copyright{
-    background: #323741;
-    color: rgba(255,255,255,0.6);
+#contacts--social{
+  width:20%;
+  display : flex;
+  justify-content : space-between;
 }
-.footer-copyright a{
-    color: #fff;
+#contacts--social div{
+  height:30px;
+  width:30px;
+  background-color:#aca9a9;
+  align-items:center;
+  border-radius: 30%;
 }
-.title{
-    color: white;
-    font-weight: 700 !important;
+#mentions p {
+  font-size:0.5em;
+}
+.fa {
+  padding: 15px;
+  font-size: 10px;
+  width: 50px;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 50%;
+}
+.fa:hover {
+  opacity: 0.7;
+}
+.fa-facebook {
+  background: #3B5998;
+  color: white;
+}
+.fa-twitter {
+  background: #55ACEE;
+  color: white;
+}
+.fa-instagram {
+  background: #cf55ee;
+  color: white;
 }

@@ -16,7 +16,7 @@
       <div class="live-search-container">
         <LiveSearch
           :options="disciplinas"
-          :placeholder="'Pesquise pelo nome da disciplina'"
+          :placeholder="'Pesquise o nome da disciplina'"
         />
       </div>
 
