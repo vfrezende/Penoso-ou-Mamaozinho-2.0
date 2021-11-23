@@ -15,16 +15,18 @@ Agora, além de pesquisar as disciplinas e classificá-las como Penosas ou Melzi
 * Nathan Nogueira
 * Wesley Paulino Fernandes Maciel
 * Felipe Seppe de Faria
-* Vitor Franco Rezende
-* 
+* Vitor Franco Rezende 
 ### Instalação
 
-* Pode ser necessário conceder permissão de execução do script `pom`.
+* Certifique-se que o Docker esteje instalado em sua maquina. Caso não esteja, siga o tutorial abaixo:
+    ```bash
+        https://docs.docker.com/get-docker/
+    ```
+1. Clone o repositório e vá à raiz do projeto
+    * Pode ser necessário conceder permissão de execução do script `pom`.
     ```bash
     chmod +x pom
     ```
-
-1. Clone o repositório e vá à raiz do projeto
     ```bash
     git clone https://github.com/vfrezende/Penoso-ou-Mamaozinho-2.0.git
     cd Penoso-ou-Mamaozinho-2.0
