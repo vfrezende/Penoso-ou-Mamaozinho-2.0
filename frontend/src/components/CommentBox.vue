@@ -84,6 +84,7 @@ export default {
                 title: 'Você não é o autor(a) deste comentário',
                 icon: 'error',
                 confirmButtonText: 'Ok',
+                imageUrl: 'https://acegif.com/wp-content/gif/thinking-emoji-30.gif',
                 confirmButtonColor: '#3085d6'
               })
             }
