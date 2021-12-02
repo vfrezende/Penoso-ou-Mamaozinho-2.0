@@ -1,0 +1,64 @@
+name: Pipeline - POM
+on: 
+  push:
+    branches:
+    - master
+
+jobs:
+  Buildando:
+    runs-on: ubuntu-latest
+    steps:
+  
+      - run: echo "Rodando no Ubunto 🐧"
+      
+      - run: echo "🔎 Rodando na branch ${{ github.ref }} do repo ${{ github.repository }}."
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: List files in the repository
+        run: 
+          ls -a ${{github.workspace}}
+      
+      - name: Setup Python
+        uses: actions/setup-python@v2.3.1
+        with:
+          # Version range or exact version of a Python version to use, using SemVer's version range syntax.
+            python-version: 3.7.6
+          # Used to specify a package manager for caching in the default directory. Supported values: pip, pipenv.
+            cache:  pip
+          # The target architecture (x86, x64) of the Python interpreter.
+            architecture: x64
+          # Used to pull python distributions from actions/python-versions. Since there's a default, this is typically not supplied by the user.
+          # Used to specify the path to dependency files. Supports wildcards or a list of file names for caching multiple dependencies.
+            cache-dependency-path: '${{ github.workspace }}/requirements.txt'
+      
+
+      - name: Setup Node
+        uses: actions/setup-node@v2.5.0
+        with:
+          node-version:  '14'
+      
+      - run:  |
+          echo "Buildando Frontend"    
+          cd ${{github.workspace}}/frontend
+          cp .env.example .env
+          npm install
+          npm build
+      - run:  |
+          echo "Configurando conexao com o banco de dados"
+          cd ${{github.workspace}}
+          echo "SECRET_KEY=mysecretkey123">>.env 
+          echo ${{secrets.BD}}>>.env
+        
+      - run: |
+          echo "Buildando Backend"
+          cd ${{github.workspace}}
+          python3 -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          
+          
+
+
+      
+      
