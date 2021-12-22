@@ -195,3 +195,27 @@ class Penoso(db.Model):
             'id_disciplina': self.id_disciplina,
             'id_user': self.id_user,
         }
+
+
+
+class DenunciaComentario(db.Model):
+    __tablename__ = 'denuncias'
+
+    id = db.Column(db.Integer, primary_key=True)
+    id_comentario = db.Column(db.Integer)
+    id_user = db.Column(db.Integer)
+
+    def __init__(self, id_comentario, id_user):
+        self.id_comentario = id_comentario
+        self.id_user = id_user
+
+    def __repr__(self):
+        return '<id {}>'.format(self.id)
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'id_comentario': self.id_comentario,
+            'id_user': self.id_user,
+        }
+
