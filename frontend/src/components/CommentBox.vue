@@ -15,6 +15,9 @@
             <b-button class="rating-button" variant="outline-dark" @click="deleteComment">
               <p>&#128465; </p>
             </b-button>
+            <b-button class="rating-button" variant="outline-dark" @click="reportComment">
+              <p>&#128544; </p>
+            </b-button>
         </div>
     </div>
     <div class="comment-container">
@@ -85,6 +88,35 @@ export default {
                 icon: 'error',
                 confirmButtonText: 'Ok',
                 imageUrl: 'https://acegif.com/wp-content/gif/thinking-emoji-30.gif',
+                confirmButtonColor: '#3085d6'
+              })
+            }
+          })
+        }
+      })
+    },
+    reportComment: function () {
+      this.$swal({
+        title: 'Tem certeza de deseja denunciar este  comentário',
+        text: 'Comentários com 5 denuncias são excluidos',
+        showCancelButton: true,
+        icon: 'question',
+        confirmButtonText: 'Quero prosseguir',
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Deixa pra lá'
+      }).then(response => {
+        if (response.isConfirmed) {
+          this.$http.post(this.$api_url + '/api/cadastro/denunciar_comentario', {
+            id_comentario: this.id
+          }).then(response => {
+            if (response.data.status === 'success') {
+              location.reload()
+            } else if (response.data.message === 'Voce ja denunciou este comentário') {
+              this.$swal({
+                title: 'Voce já denunciou este comentário',
+                icon: 'error',
+                confirmButtonText: 'Ok',
                 confirmButtonColor: '#3085d6'
               })
             }
