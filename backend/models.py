@@ -2,7 +2,7 @@ from backend import db
 
 
 class Comentario(db.Model):
-    __tablename__ = 'comentario'
+    __tablename__ = "comentario"
 
     id = db.Column(db.Integer, primary_key=True)
     id_user = db.Column(db.Integer)
@@ -15,19 +15,19 @@ class Comentario(db.Model):
         self.texto = texto
 
     def __repr__(self):
-        return '<id {}>'.format(self.id)
+        return "<id {}>".format(self.id)
 
     def serialize(self):
         return {
-            'id': self.id,
-            'id_user': self.id_user,
-            'id_disciplina': self.id_disciplina,
-            'texto': self.texto,
+            "id": self.id,
+            "id_user": self.id_user,
+            "id_disciplina": self.id_disciplina,
+            "texto": self.texto,
         }
 
 
 class Users(db.Model):
-    __tablename__ = 'users'
+    __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String())
@@ -44,20 +44,20 @@ class Users(db.Model):
         self.picture = picture
 
     def __repr__(self):
-        return '<id {}>'.format(self.id)
+        return "<id {}>".format(self.id)
 
     def serialize(self):
         return {
-            'id': self.id,
-            'name': self.name,
-            'email': self.email,
-            'username': self.username,
-            'picture': self.picture,
+            "id": self.id,
+            "name": self.name,
+            "email": self.email,
+            "username": self.username,
+            "picture": self.picture,
         }
 
 
 class Disciplinas(db.Model):
-    __tablename__ = 'disciplinas'
+    __tablename__ = "disciplinas"
 
     id = db.Column(db.Integer, primary_key=True)
     id_user = db.Column(db.Integer)
@@ -70,19 +70,19 @@ class Disciplinas(db.Model):
         self.nome_limpo = nome_limpo
 
     def __repr__(self):
-        return '<id {}>'.format(self.id)
+        return "<id {}>".format(self.id)
 
     def serialize(self):
         return {
-            'id': self.id,
-            'id_user': self.id_user,
-            'nome': self.nome,
-            'nome_limpo': self.nome_limpo,
+            "id": self.id,
+            "id_user": self.id_user,
+            "nome": self.nome,
+            "nome_limpo": self.nome_limpo,
         }
 
 
 class Gostei(db.Model):
-    __tablename__ = 'gostei'
+    __tablename__ = "gostei"
 
     id = db.Column(db.Integer, primary_key=True)
     id_comentario = db.Column(db.Integer)
@@ -93,18 +93,18 @@ class Gostei(db.Model):
         self.id_user = id_user
 
     def __repr__(self):
-        return '<id {}>'.format(self.id)
+        return "<id {}>".format(self.id)
 
     def serialize(self):
         return {
-            'id': self.id,
-            'id_comentario': self.id_comentario,
-            'id_user': self.id_user,
+            "id": self.id,
+            "id_comentario": self.id_comentario,
+            "id_user": self.id_user,
         }
 
 
 class NaoGostei(db.Model):
-    __tablename__ = 'nao_gostei'
+    __tablename__ = "nao_gostei"
 
     id = db.Column(db.Integer, primary_key=True)
     id_comentario = db.Column(db.Integer)
@@ -115,18 +115,18 @@ class NaoGostei(db.Model):
         self.id_user = id_user
 
     def __repr__(self):
-        return '<id {}>'.format(self.id)
+        return "<id {}>".format(self.id)
 
     def serialize(self):
         return {
-            'id': self.id,
-            'id_comentario': self.id_comentario,
-            'id_user': self.id_user,
+            "id": self.id,
+            "id_comentario": self.id_comentario,
+            "id_user": self.id_user,
         }
 
 
 class Links(db.Model):
-    __tablename__ = 'links'
+    __tablename__ = "links"
 
     id = db.Column(db.Integer, primary_key=True)
     id_disciplina = db.Column(db.Integer)
@@ -141,20 +141,20 @@ class Links(db.Model):
         self.link = link
 
     def __repr__(self):
-        return '<id {}>'.format(self.id)
+        return "<id {}>".format(self.id)
 
     def serialize(self):
         return {
-            'id': self.id,
-            'id_disciplina': self.id_disciplina,
-            'id_user': self.id_user,
-            'titulo': self.titulo,
-            'link': self.link,
+            "id": self.id,
+            "id_disciplina": self.id_disciplina,
+            "id_user": self.id_user,
+            "titulo": self.titulo,
+            "link": self.link,
         }
 
 
 class Mamao(db.Model):
-    __tablename__ = 'mamao'
+    __tablename__ = "mamao"
 
     id = db.Column(db.Integer, primary_key=True)
     id_disciplina = db.Column(db.Integer)
@@ -165,18 +165,18 @@ class Mamao(db.Model):
         self.id_user = id_user
 
     def __repr__(self):
-        return '<id {}>'.format(self.id)
+        return "<id {}>".format(self.id)
 
     def serialize(self):
         return {
-            'id': self.id,
-            'id_disciplina': self.id_disciplina,
-            'id_user': self.id_user,
+            "id": self.id,
+            "id_disciplina": self.id_disciplina,
+            "id_user": self.id_user,
         }
 
 
 class Penoso(db.Model):
-    __tablename__ = 'penoso'
+    __tablename__ = "penoso"
 
     id = db.Column(db.Integer, primary_key=True)
     id_disciplina = db.Column(db.Integer)
@@ -187,19 +187,18 @@ class Penoso(db.Model):
         self.id_user = id_user
 
     def __repr__(self):
-        return '<id {}>'.format(self.id)
+        return "<id {}>".format(self.id)
 
     def serialize(self):
         return {
-            'id': self.id,
-            'id_disciplina': self.id_disciplina,
-            'id_user': self.id_user,
+            "id": self.id,
+            "id_disciplina": self.id_disciplina,
+            "id_user": self.id_user,
         }
 
 
-
 class DenunciaComentario(db.Model):
-    __tablename__ = 'denuncias'
+    __tablename__ = "denuncias"
 
     id = db.Column(db.Integer, primary_key=True)
     id_comentario = db.Column(db.Integer)
@@ -210,12 +209,11 @@ class DenunciaComentario(db.Model):
         self.id_user = id_user
 
     def __repr__(self):
-        return '<id {}>'.format(self.id)
+        return "<id {}>".format(self.id)
 
     def serialize(self):
         return {
-            'id': self.id,
-            'id_comentario': self.id_comentario,
-            'id_user': self.id_user,
+            "id": self.id,
+            "id_comentario": self.id_comentario,
+            "id_user": self.id_user,
         }
-

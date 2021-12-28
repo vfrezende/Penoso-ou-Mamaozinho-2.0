@@ -1,5 +1,5 @@
 from backend import db
-from backend.utils import sanitizeString
+from backend.utils.utils import sanitizeString
 from backend.models import (
     Disciplinas,
     Users,
@@ -65,19 +65,17 @@ def cadastroUsuario(data):
 
 def getUsuario(**kwargs):
     message = "user not found"
-    if kwargs.get('user'):
-        user = kwargs.get('user')
+    if kwargs.get("user"):
+        user = kwargs.get("user")
         user_dict = user.serialize()
-        user_dict['password'] = ''
+        user_dict["password"] = ""
         return True, user_dict
-    elif kwargs.get('id_user'):
-        id_user = kwargs.get('id_user')
-        user = Users.query \
-            .filter_by(id=id_user) \
-            .first()
+    elif kwargs.get("id_user"):
+        id_user = kwargs.get("id_user")
+        user = Users.query.filter_by(id=id_user).first()
         if user:
             user_dict = user.serialize()
-            user_dict['password'] = ''
+            user_dict["password"] = ""
             return True, user_dict
         else:
             return False, message
@@ -86,9 +84,7 @@ def getUsuario(**kwargs):
 
 
 def checkUsuario(username, passwordEntered):
-    user = Users.query. \
-        filter_by(username=username) \
-        .first()
+    user = Users.query.filter_by(username=username).first()
 
     if user:
         correctPassword = user.password
@@ -100,24 +96,20 @@ def checkUsuario(username, passwordEntered):
 
 
 def updateUsuario(id_user, data):
-    name = data.get('name')
-    picture = data.get('picture', '')
-    password = data.get('password')
+    name = data.get("name")
+    picture = data.get("profile_picture", "")
+    password = data.get("password")
 
     new_data = {
-        'name': name,
-        'picture': picture,
+        "name": name,
+        "picture": picture,
     }
 
     if password:
-        new_data.update({
-            'password': sha256_crypt.encrypt(str(password))
-        })
+        new_data.update({"password": sha256_crypt.encrypt(str(password))})
 
     try:
-        Users.query \
-            .filter_by(id=id_user) \
-            .update(new_data)
+        Users.query.filter_by(id=id_user).update(new_data)
         db.session.commit()
         return True, None
 

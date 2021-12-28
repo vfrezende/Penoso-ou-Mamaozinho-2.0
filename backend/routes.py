@@ -1,5 +1,6 @@
 from backend import app
-from backend.utils import success_response, error_response, update_session
+from backend.utils.responses import success_response, error_response
+from backend.utils.utils import update_session
 from backend.api import (
     cadastroComentario,
     cadastroUsuario,
@@ -10,8 +11,6 @@ from backend.api import (
     deletarComentario,
     getUsuario,
     updateUsuario,
-)
-from backend.api import (
     getDisciplina,
     getDisciplinas,
     getLinks,
@@ -19,14 +18,7 @@ from backend.api import (
     checkUsuario,
     getTopDisciplinas,
 )
-from flask import (
-    render_template,
-    redirect,
-    url_for,
-    session,
-    request,
-    jsonify
-)
+from flask import render_template, redirect, url_for, session, request, jsonify
 from functools import wraps
 
 
@@ -44,14 +36,12 @@ def is_logged_in(f):
 # index page
 @app.route("/")
 def index():
-    # create cursor
     return redirect(url_for("home"))
 
 
 # Home page
 @app.route("/home")
 def home():
-    # create cursor
     return render_template("home.html")
 
 
@@ -180,10 +170,10 @@ def apiCadastroUsuario():
         return error_response(message)
 
 
-@app.route('/api/update/usuario', methods=['POST'])
+@app.route("/api/update/usuario", methods=["POST"])
 def apiUpdateUsuario():
     r = request.get_json()
-    id_user = session.get('id')
+    id_user = session.get("id")
     success, message = updateUsuario(id_user, r)
 
     if success:
