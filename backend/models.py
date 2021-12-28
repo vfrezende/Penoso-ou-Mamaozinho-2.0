@@ -1,6 +1,8 @@
 from backend import db
+from backend.utils.decorators import serializable_class
 
 
+@serializable_class
 class Comentario(db.Model):
     __tablename__ = "comentario"
 
@@ -9,23 +11,8 @@ class Comentario(db.Model):
     id_disciplina = db.Column(db.Integer)
     texto = db.Column(db.String())
 
-    def __init__(self, id_user, id_disciplina, texto):
-        self.id_user = id_user
-        self.id_disciplina = id_disciplina
-        self.texto = texto
 
-    def __repr__(self):
-        return "<id {}>".format(self.id)
-
-    def serialize(self):
-        return {
-            "id": self.id,
-            "id_user": self.id_user,
-            "id_disciplina": self.id_disciplina,
-            "texto": self.texto,
-        }
-
-
+@serializable_class
 class Users(db.Model):
     __tablename__ = "users"
 
@@ -43,19 +30,8 @@ class Users(db.Model):
         self.password = password
         self.picture = picture
 
-    def __repr__(self):
-        return "<id {}>".format(self.id)
 
-    def serialize(self):
-        return {
-            "id": self.id,
-            "name": self.name,
-            "email": self.email,
-            "username": self.username,
-            "picture": self.picture,
-        }
-
-
+@serializable_class
 class Disciplinas(db.Model):
     __tablename__ = "disciplinas"
 
@@ -69,18 +45,8 @@ class Disciplinas(db.Model):
         self.nome = nome
         self.nome_limpo = nome_limpo
 
-    def __repr__(self):
-        return "<id {}>".format(self.id)
 
-    def serialize(self):
-        return {
-            "id": self.id,
-            "id_user": self.id_user,
-            "nome": self.nome,
-            "nome_limpo": self.nome_limpo,
-        }
-
-
+@serializable_class
 class Gostei(db.Model):
     __tablename__ = "gostei"
 
@@ -92,17 +58,8 @@ class Gostei(db.Model):
         self.id_comentario = id_comentario
         self.id_user = id_user
 
-    def __repr__(self):
-        return "<id {}>".format(self.id)
 
-    def serialize(self):
-        return {
-            "id": self.id,
-            "id_comentario": self.id_comentario,
-            "id_user": self.id_user,
-        }
-
-
+@serializable_class
 class NaoGostei(db.Model):
     __tablename__ = "nao_gostei"
 
@@ -114,17 +71,8 @@ class NaoGostei(db.Model):
         self.id_comentario = id_comentario
         self.id_user = id_user
 
-    def __repr__(self):
-        return "<id {}>".format(self.id)
 
-    def serialize(self):
-        return {
-            "id": self.id,
-            "id_comentario": self.id_comentario,
-            "id_user": self.id_user,
-        }
-
-
+@serializable_class
 class Links(db.Model):
     __tablename__ = "links"
 
@@ -140,19 +88,8 @@ class Links(db.Model):
         self.titulo = titulo
         self.link = link
 
-    def __repr__(self):
-        return "<id {}>".format(self.id)
 
-    def serialize(self):
-        return {
-            "id": self.id,
-            "id_disciplina": self.id_disciplina,
-            "id_user": self.id_user,
-            "titulo": self.titulo,
-            "link": self.link,
-        }
-
-
+@serializable_class
 class Mamao(db.Model):
     __tablename__ = "mamao"
 
@@ -164,17 +101,8 @@ class Mamao(db.Model):
         self.id_disciplina = id_disciplina
         self.id_user = id_user
 
-    def __repr__(self):
-        return "<id {}>".format(self.id)
 
-    def serialize(self):
-        return {
-            "id": self.id,
-            "id_disciplina": self.id_disciplina,
-            "id_user": self.id_user,
-        }
-
-
+@serializable_class
 class Penoso(db.Model):
     __tablename__ = "penoso"
 
@@ -186,17 +114,8 @@ class Penoso(db.Model):
         self.id_disciplina = id_disciplina
         self.id_user = id_user
 
-    def __repr__(self):
-        return "<id {}>".format(self.id)
 
-    def serialize(self):
-        return {
-            "id": self.id,
-            "id_disciplina": self.id_disciplina,
-            "id_user": self.id_user,
-        }
-
-
+@serializable_class
 class DenunciaComentario(db.Model):
     __tablename__ = "denuncias"
 
@@ -207,13 +126,3 @@ class DenunciaComentario(db.Model):
     def __init__(self, id_comentario, id_user):
         self.id_comentario = id_comentario
         self.id_user = id_user
-
-    def __repr__(self):
-        return "<id {}>".format(self.id)
-
-    def serialize(self):
-        return {
-            "id": self.id,
-            "id_comentario": self.id_comentario,
-            "id_user": self.id_user,
-        }

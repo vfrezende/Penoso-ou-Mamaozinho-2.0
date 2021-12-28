@@ -26,3 +26,13 @@ def sanitizeString(string):
     string = re.sub(r"[^A-Za-z0-9]+", "", string)
 
     return string.lower()
+
+
+def serialization_function(cls: object):
+    return {
+        key: getattr(cls, key) for key in dir(cls)
+        if not key.startswith("_") and (
+            isinstance(getattr(cls, key), int) or
+            isinstance(getattr(cls, key), str) or
+            isinstance(getattr(cls, key), float)
+        )}

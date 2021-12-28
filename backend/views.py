@@ -1,6 +1,8 @@
 from backend import db
+from backend.utils.decorators import serializable_class
 
 
+@serializable_class
 class DisciplinasInformacoes(db.Model):
     __table__ = db.Table(
         "disciplinas_informacoes",
@@ -15,20 +17,8 @@ class DisciplinasInformacoes(db.Model):
         autoload_with=db.engine,
     )
 
-    def __repr__(self):
-        return "<id {}>".format(self.id)
 
-    def serialize(self):
-        return {
-            "id": self.id,
-            "nome": self.nome,
-            "nome_limpo": self.nome_limpo,
-            "num_mamao": self.num_mamao,
-            "num_penoso": self.num_penoso,
-            "num_comentarios": self.num_comentarios,
-        }
-
-
+@serializable_class
 class ComentariosInformacoes(db.Model):
     __table__ = db.Table(
         "comentarios_informacoes",
@@ -44,21 +34,8 @@ class ComentariosInformacoes(db.Model):
         autoload_with=db.engine,
     )
 
-    def __repr__(self):
-        return "<id {}>".format(self.id)
 
-    def serialize(self):
-        return {
-            "id_comentario": self.id_comentario,
-            "id_disciplina": self.id_disciplina,
-            "texto": self.texto,
-            "picture": self.picture,
-            "username": self.username,
-            "num_gostei": self.num_gostei,
-            "num_nao_gostei": self.num_nao_gostei,
-        }
-
-
+@serializable_class
 class LinksInformacoes(db.Model):
     __table__ = db.Table(
         "links_informacoes",
@@ -73,20 +50,8 @@ class LinksInformacoes(db.Model):
         autoload_with=db.engine,
     )
 
-    def __repr__(self):
-        return "<id {}>".format(self.id)
 
-    def serialize(self):
-        return {
-            "id_link": self.id_link,
-            "id_disciplina": self.id_disciplina,
-            "titulo": self.titulo,
-            "link": self.link,
-            "picture": self.picture,
-            "username": self.username,
-        }
-
-
+@serializable_class
 class AvaliacoesDisciplinas(db.Model):
     __table__ = db.Table(
         "avaliacoes_disciplinas",
@@ -99,18 +64,8 @@ class AvaliacoesDisciplinas(db.Model):
         autoload_with=db.engine,
     )
 
-    def __repr__(self):
-        return "<id {}>".format(self.id)
 
-    def serialize(self):
-        return {
-            "id": self.id,
-            "id_disciplina": self.id_disciplina,
-            "id_user": self.id_user,
-            "categoria": self.categoria,
-        }
-
-
+@serializable_class
 class AvaliacoesComentario(db.Model):
     __table__ = db.Table(
         "avaliacoes_comentario",
@@ -121,13 +76,3 @@ class AvaliacoesComentario(db.Model):
         autoload=True,
         autoload_with=db.engine,
     )
-
-    def __repr__(self):
-        return "<id {}>".format(self.id)
-
-    def serialize(self):
-        return {
-            "id": self.id,
-            "id_comentario": self.id_comentario,
-            "id_user": self.id_user,
-        }

@@ -22,23 +22,16 @@ from passlib.hash import sha256_crypt
 
 
 def getDisciplinas():
-    return getDisciplina()
+    disciplinas = Disciplinas.query.all()
+    sorted_disciplinas = sorted(
+        [d.serialize() for d in disciplinas], key=lambda x: x["nome"]
+    )
+    return sorted_disciplinas
 
 
-def getDisciplina(id_disciplina=None):
-    if id_disciplina:
-        disciplina = DisciplinasInformacoes.query.filter_by(id=id_disciplina).first()
-        if disciplina:
-            value = disciplina.serialize()
-        else:
-            value = {}
-    else:
-        disciplinas = Disciplinas.query.all()
-        sort_disciplinas = sorted(
-            [d.serialize() for d in disciplinas], key=lambda x: x["nome"]
-        )
-        value = sort_disciplinas
-    return value
+def getDisciplina(id_disciplina: int):
+    disciplina = DisciplinasInformacoes.query.filter_by(id=id_disciplina).first()
+    return disciplina.serialize() if disciplina else {}
 
 
 def cadastroUsuario(data):
