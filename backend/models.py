@@ -1,6 +1,8 @@
 from backend import db
 from backend.utils.decorators import serializable_class
 
+from sqlalchemy.types import LargeBinary
+
 
 @serializable_class
 class Comentario(db.Model):
@@ -10,6 +12,11 @@ class Comentario(db.Model):
     id_user = db.Column(db.Integer)
     id_disciplina = db.Column(db.Integer)
     texto = db.Column(db.String())
+
+    def __init__(self, id_user, id_disciplina, texto):
+        self.id_user = id_user
+        self.id_disciplina = id_disciplina
+        self.texto = texto
 
 
 @serializable_class
@@ -126,3 +133,24 @@ class DenunciaComentario(db.Model):
     def __init__(self, id_comentario, id_user):
         self.id_comentario = id_comentario
         self.id_user = id_user
+
+
+@serializable_class
+class Arquivos(db.Model):
+    __tablename__ = "arquivos"
+
+    id = db.Column(db.Integer, primary_key=True)
+    id_disciplina = db.Column(db.Integer)
+    id_user = db.Column(db.Integer)
+    nome = db.Column(db.String())
+    mimetype = db.Column(db.String())
+    descricao = db.Column(db.String())
+    dados = db.Column(LargeBinary)
+
+    def __init__(self, id_disciplina, id_user, nome, mimetype, descricao, dados):
+        self.id_disciplina = id_disciplina
+        self.id_user = id_user
+        self.nome = nome
+        self.mimetype = mimetype
+        self.descricao = descricao
+        self.dados = dados

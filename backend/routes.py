@@ -1,7 +1,9 @@
 from backend import app
+from backend.utils.decorators import is_logged_in
 from backend.utils.responses import success_response, error_response
 from backend.utils.utils import update_session
 from backend.api import (
+    cadastro_arquivo,
     cadastroComentario,
     cadastroUsuario,
     cadastroDisciplina,
@@ -9,6 +11,8 @@ from backend.api import (
     cadastroAvaliacaoDisciplina,
     cadastroAvaliacaoComentario,
     deletarComentario,
+    get_arquivo,
+    get_arquivos_informacoes,
     getUsuario,
     updateUsuario,
     getDisciplina,
@@ -18,19 +22,15 @@ from backend.api import (
     checkUsuario,
     getTopDisciplinas,
 )
-from flask import render_template, redirect, url_for, session, request, jsonify
-from functools import wraps
-
-
-def is_logged_in(f):
-    @wraps(f)
-    def wrap(*args, **kwargs):
-        if "logged_in" in session:
-            return f(*args, **kwargs)
-        else:
-            return redirect(url_for("login"))
-
-    return wrap
+from flask import (
+    render_template,
+    redirect,
+    url_for,
+    session,
+    request,
+    jsonify,
+    send_file
+)
 
 
 # index page
@@ -153,6 +153,24 @@ def apiLinks(id_disciplina):
     return jsonify(data)
 
 
+@app.route("/api/arquivos/<int:id_disciplina>",  methods=["GET", "POST"])
+@is_logged_in
+def api_arquivos(id_disciplina):
+    data = get_arquivos_informacoes(id_disciplina)
+    return jsonify(data)
+
+
+@app.route("/api/arquivo/<int:id_arquivo>",  methods=["GET", "POST"])
+@is_logged_in
+def api_arquivo(id_arquivo):
+    arquivo = get_arquivo(id_arquivo)
+    return send_file(
+        arquivo["dados"],
+        mimetype=arquivo["mimetype"],
+        attachment_filename=arquivo["nome"],
+        as_attachment=True)
+
+
 @app.route("/api/disciplinas/top/<int:n>/<string:categoria>")
 def apiTopDisciplinas(n, categoria):
     data = getTopDisciplinas(n, categoria)
@@ -230,6 +248,32 @@ def apiCadastroLink():
     id_user = session.get("id")
 
     success, message = cadastroLink(id_user, id_disciplina, titulo, link)
+    if success:
+        return success_response()
+    else:
+        return error_response(message)
+
+
+@app.route("/api/cadastro/arquivo", methods=["POST"])
+@is_logged_in
+def api_cadastro_arquivo():
+    r = request.get_json()
+
+    id_disciplina = r.get("id_disciplina")
+    nome = r.get("nome")
+    mimetype = r.get("mimetype")
+    descricao = r.get("descricao")
+    dados = r.get("dados")
+    id_user = session.get("id", 5)
+
+    success, message = cadastro_arquivo(
+        id_user,
+        id_disciplina,
+        nome,
+        mimetype,
+        descricao,
+        dados
+    )
     if success:
         return success_response()
     else:

@@ -52,6 +52,23 @@ class LinksInformacoes(db.Model):
 
 
 @serializable_class
+class ArquivosInformacoes(db.Model):
+    __table__ = db.Table(
+        "arquivos_informacoes",
+        db.metadata,
+        db.Column("id_arquivo", db.Integer, primary_key=True),
+        db.Column("id_disciplina", db.Integer),
+        db.Column("nome", db.String()),
+        db.Column("descricao", db.String()),
+        db.Column("mimetype", db.String()),
+        db.Column("picture", db.String()),
+        db.Column("username", db.String()),
+        autoload=True,
+        autoload_with=db.engine,
+    )
+
+
+@serializable_class
 class AvaliacoesDisciplinas(db.Model):
     __table__ = db.Table(
         "avaliacoes_disciplinas",
