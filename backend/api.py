@@ -1,6 +1,7 @@
 from backend import db
 from backend.utils.utils import sanitizeString
 from backend.models import (
+    Arquivos,
     Disciplinas,
     Users,
     Mamao,
@@ -11,14 +12,17 @@ from backend.models import (
     Links,
 )
 from backend.views import (
+    ArquivosInformacoes,
     DisciplinasInformacoes,
     ComentariosInformacoes,
     LinksInformacoes,
     AvaliacoesDisciplinas,
     AvaliacoesComentario,
 )
-
+import traceback
 from passlib.hash import sha256_crypt
+from io import BytesIO
+from base64 import b64decode
 
 
 def getDisciplinas():
@@ -205,6 +209,26 @@ def cadastroLink(id_user, id_disciplina, titulo, link):
         return False, "ocorreu um erro enquanto processava"
 
 
+def cadastro_arquivo(id_user, id_disciplina, nome, mimetype, descricao, dados):
+    try:
+        id_user = int(id_user)
+        novo_arquivo = Arquivos(
+            id_user=id_user,
+            id_disciplina=id_disciplina,
+            nome=nome.strip(),
+            mimetype=mimetype,
+            descricao=descricao,
+            dados=dados.encode("ascii")
+        )
+        db.session.add(novo_arquivo)
+        db.session.commit()
+        return True, None
+
+    except Exception:
+        traceback.print_exc()
+        return False, "ocorreu um erro enquanto processava"
+
+
 def getComentarios(id_disciplina=None):
     if id_disciplina:
         comentarios = ComentariosInformacoes.query.filter_by(
@@ -228,7 +252,7 @@ def getLinks(id_disciplina=None):
     if id_disciplina:
         links = LinksInformacoes.query.filter_by(id_disciplina=id_disciplina).all()
     else:
-        links = ComentariosInformacoes.query.all()
+        links = LinksInformacoes.query.all()
 
     if links:
         sorted_links = sorted(
@@ -239,6 +263,24 @@ def getLinks(id_disciplina=None):
         value = links
 
     return value
+
+
+def get_arquivos_informacoes(id_disciplina: int):
+    arquivos = ArquivosInformacoes.query.filter_by(id_disciplina=id_disciplina).all()
+    if arquivos:
+        return sorted(
+            [arquivo.serialize() for arquivo in arquivos], key=lambda x: x["id_arquivo"]
+        )
+    return []
+
+
+def get_arquivo(id_arquivo: int):
+    arquivo = Arquivos.query.filter_by(id=id_arquivo).first()
+    if arquivo:
+        serialized_arquivo = arquivo.serialize()
+        serialized_arquivo["dados"] = BytesIO(b64decode(serialized_arquivo["dados"]))
+        return serialized_arquivo
+    return {}
 
 
 def getTopDisciplinas(n, categoria):

@@ -34,5 +34,6 @@ def serialization_function(cls: object):
         if not key.startswith("_") and (
             isinstance(getattr(cls, key), int) or
             isinstance(getattr(cls, key), str) or
-            isinstance(getattr(cls, key), float)
+            isinstance(getattr(cls, key), float) or
+            isinstance(getattr(cls, key), bytes)
         )}
