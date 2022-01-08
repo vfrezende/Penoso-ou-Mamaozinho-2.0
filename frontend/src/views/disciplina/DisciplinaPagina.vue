@@ -104,6 +104,51 @@
           v-bind:titulo="link.titulo"
         />
       </b-tab>
+      <b-tab title="Arquivos relacionados">
+        <div class="comment_button">
+          <div v-if="adicionar_arquivo">
+            <b-alert v-show="arquivo_erro" show variant="danger">{{ arquivo_erro }}</b-alert>
+            <b-button pill variant="danger" class="close_button" @click="adicionar_arquivo = !adicionar_arquivo">Fechar</b-button>
+            <b-button pill variant="success" class="btn text-center" @click="cadastrar_arquivo">Enviar</b-button>
+          </div>
+          <div v-else>
+            <b-button pill variant="success" class="btn text-center" @click="adicionar_arquivo = !adicionar_arquivo">Adicionar arquivo</b-button>
+          </div>
+
+          <div class="comment_form" v-show="adicionar_arquivo">
+            <label for="arquivo_titulo">Descrição do arquivo</label>
+            <b-form-input
+              id="arquivo_titulo"
+              type="text"
+              v-model="arquivo.descricao"
+              placeholder="Descrição do arquivo..."
+              rows="3"
+              max-rows="6"
+              class="comment-container"
+            ></b-form-input>
+            <label for="arquivo_dados">Arquivo</label>
+            <b-form-file
+              id="arquivo_dados"
+              v-model="arquivo.dados"
+              :state="Boolean(arquivo.dados)"
+              placeholder="Selecione um arquivo ou o arraste aqui..."
+              drop-placeholder="Arraste o arquivo..."
+              rows="3"
+              max-rows="6"
+              class="comment-container"
+            ></b-form-file>
+          </div>
+        </div>
+        <FileBox
+          v-for="arquivo in arquivos"
+          v-bind:key="arquivo.id_arquivo"
+          v-bind:id="arquivo.id_arquivo"
+          v-bind:name="arquivo.username"
+          v-bind:picture="arquivo.picture"
+          v-bind:nome="arquivo.nome"
+          v-bind:descricao="arquivo.descricao"
+        />
+      </b-tab>
     </b-tabs>
   </b-container>
 </div>
@@ -112,6 +157,7 @@
 <script>
 import CommentBox from '@/components/CommentBox.vue'
 import LinkBox from '@/components/LinkBox.vue'
+import FileBox from '@/components/FileBox.vue'
 import Header from '@/components/Header.vue'
 
 export default {
@@ -119,6 +165,7 @@ export default {
   components: {
     CommentBox,
     LinkBox,
+    FileBox,
     Header
   },
   data: () => {
@@ -127,6 +174,7 @@ export default {
       disciplina: '',
       comments: [],
       links: [],
+      arquivos: [],
       val_mamao: 0,
       val_penoso: 0,
       selected: '',
@@ -136,16 +184,30 @@ export default {
       ],
       adicionar_comentario: false,
       adicionar_link: false,
+      adicionar_arquivo: false,
       comentario: '',
       teste: '',
       avaliacao_erro: '',
       link_erro: '',
       comentario_erro: '',
+      arquivo_erro: '',
       link_titulo: '',
-      link_url: ''
+      link_url: '',
+      arquivo: {
+        descricao: '',
+        dados: ''
+      }
     }
   },
   methods: {
+    to_base64: async function (file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = () => resolve(reader.result)
+        reader.onerror = error => reject(error)
+      })
+    },
     cadastrar_comentario: function (e) {
       e.preventDefault()
       if (!this.comentario) {
@@ -188,6 +250,34 @@ export default {
           })
       }
     },
+    cadastrar_arquivo: async function (e) {
+      e.preventDefault()
+      if (!this.arquivo.descricao | !this.arquivo.dados) {
+        this.arquivo_erro = 'Defina o nome do arquivo e o envie!'
+      } else {
+        let dados = await this.to_base64(this.arquivo.dados)
+        dados = dados.split(';base64,')
+        this.$http.post(this.$api_url + '/api/cadastro/arquivo', {
+          id_disciplina: this.id_disciplina,
+          nome: this.arquivo.dados.name,
+          descricao: this.arquivo.descricao,
+          mimetype: dados[0].split(':')[1],
+          dados: dados[1]
+        })
+          .then(response => {
+            if (response.data.status === 'error') {
+              this.arquivo_erro = response.data.message
+            } else {
+              this.arquivo.nome = ''
+              this.arquivo.mimetype = ''
+              this.arquivo.descricao = ''
+              this.arquivo.dados = ''
+              this.adicionar_arquivo = false
+              this.get_arquivos()
+            }
+          })
+      }
+    },
     get_comentarios: function () {
       this.$http.get(this.$api_url + '/api/comentarios/' + this.id_disciplina)
         .then(response => {
@@ -198,6 +288,12 @@ export default {
       this.$http.get(this.$api_url + '/api/links/' + this.id_disciplina)
         .then(response => {
           this.links = response.data
+        })
+    },
+    get_arquivos: function () {
+      this.$http.get(this.$api_url + '/api/arquivos/' + this.id_disciplina)
+        .then(response => {
+          this.arquivos = response.data
         })
     },
     get_disciplina: function () {
@@ -231,6 +327,7 @@ export default {
     this.get_disciplina()
     this.get_comentarios()
     this.get_links()
+    this.get_arquivos()
   }
 }
 </script>
