@@ -10,6 +10,7 @@ from backend.models import (
     NaoGostei,
     Comentario,
     Links,
+    DenunciaComentario
 )
 from backend.views import (
     ArquivosInformacoes,
@@ -330,3 +331,48 @@ def deletarComentario(id_comentario, username):
     except Exception as e:
         print(e)
         return False, "ocorreu um erro enquanto processava"
+
+
+
+
+def denunciarComentario(id_comentario, id_user):
+
+    try:
+        id_user = int(id_user)
+        r = DenunciaComentario.query.filter_by(
+            id_comentario=id_comentario, id_user=id_user
+        ).first()
+
+
+        if r:
+            return False, "Voce ja denunciou este comentario"
+
+        else:
+     
+
+            nova_denuncia = DenunciaComentario(
+                id_comentario=id_comentario, id_user=id_user)
+
+
+            db.session.add(nova_denuncia)
+            db.session.commit()            
+                
+            denuncias = DenunciaComentario.query.filter_by(
+            id_comentario=id_comentario).all()
+
+            if(len(denuncias) >=5):
+                
+                Gostei.query.filter_by(id_comentario=id_comentario).delete()
+                NaoGostei.query.filter_by(id_comentario=id_comentario).delete()
+                Comentario.query.filter_by(id=id_comentario).delete()
+                db.session.commit()            
+
+                
+            return True, None
+
+    except Exception as e:
+        print(e)
+        return False, "ocorreu um erro enquanto processava"
+
+    
+    

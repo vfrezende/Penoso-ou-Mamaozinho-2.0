@@ -21,6 +21,7 @@ from backend.api import (
     getComentarios,
     checkUsuario,
     getTopDisciplinas,
+    denunciarComentario
 )
 from flask import (
     render_template,
@@ -325,6 +326,23 @@ def apiDeletarComentario():
     username = session.get("username")
 
     success, message = deletarComentario(id_comentario, username)
+    if success:
+        return success_response()
+    else:
+        return error_response(message)
+
+
+
+@app.route("/api/cadastro/denunciar_comentario", methods=["POST"])
+@is_logged_in
+def apiDenunciarComentario():
+    r = request.get_json()
+
+    id_comentario = r.get("id_comentario")
+    id_user = session.get("id")
+
+    success, message = denunciarComentario(id_comentario, id_user) 
+    print(message)
     if success:
         return success_response()
     else:
