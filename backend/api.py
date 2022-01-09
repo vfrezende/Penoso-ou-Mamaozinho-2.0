@@ -343,20 +343,14 @@ def denunciarComentario(id_comentario, id_user):
             id_comentario=id_comentario, id_user=id_user
         ).first()
 
-
         if r:
             return False, "Voce ja denunciou este comentario"
-
         else:
-     
-
             nova_denuncia = DenunciaComentario(
                 id_comentario=id_comentario, id_user=id_user)
 
-
             db.session.add(nova_denuncia)
             db.session.commit()            
-                
             denuncias = DenunciaComentario.query.filter_by(
             id_comentario=id_comentario).all()
 
@@ -366,7 +360,6 @@ def denunciarComentario(id_comentario, id_user):
                 NaoGostei.query.filter_by(id_comentario=id_comentario).delete()
                 Comentario.query.filter_by(id=id_comentario).delete()
                 db.session.commit()            
-
                 
             return True, None
 
