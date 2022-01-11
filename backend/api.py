@@ -367,5 +367,23 @@ def denunciarComentario(id_comentario, id_user):
         print(e)
         return False, "ocorreu um erro enquanto processava"
 
+def getAvaliouDisciplina(id_disciplina, id_user):
+    
+    try:
+        id_user = int(id_user)
+        id_disciplina = int(id_disciplina)
+        penoso = Penoso.query.filter_by(id_disciplina=id_disciplina, id_user=id_user).first()
+        mamao = Mamao.query.filter_by(id_disciplina=id_disciplina, id_user=id_user).first()
+  
+        if(penoso or mamao):
+            return {"status": "avaliado"}
+        else:
+            return {"status": "não avaliado"}
+
+    except Exception as e:
+        print(e)
+        return False, "ocorreu um erro enquanto processava"
+
+
     
     

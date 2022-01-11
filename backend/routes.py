@@ -21,7 +21,8 @@ from backend.api import (
     getComentarios,
     checkUsuario,
     getTopDisciplinas,
-    denunciarComentario
+    denunciarComentario,
+    getAvaliouDisciplina
 )
 from flask import (
     render_template,
@@ -347,3 +348,14 @@ def apiDenunciarComentario():
         return success_response()
     else:
         return error_response(message)
+
+
+@app.route("/api/avaliou_disciplina/<int:id_disciplina>")
+@is_logged_in
+def apiAvaliouDisciplina(id_disciplina):
+
+    id_user = session.get("id")
+    r = getAvaliouDisciplina(id_disciplina, id_user)
+    return jsonify(r)
+
+ 
