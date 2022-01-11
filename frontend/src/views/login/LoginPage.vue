@@ -2,18 +2,21 @@
   <div id="LoginPage">
     <Header />
     <LoginForm />
+    <Footer />
   </div>
 </template>
 
 <script>
 import LoginForm from '@/components/LoginForm.vue'
 import Header from '@/components/Header.vue'
+import Footer from '@/components/Footer.vue'
 
 export default {
   name: 'LoginPage',
   components: {
     LoginForm,
-    Header
+    Header,
+    Footer
   },
   data: () => {
     return {}

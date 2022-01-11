@@ -8,18 +8,21 @@
         </p>
         <a href="/login">Pagina de Login</a>
     </b-container>
+    <Footer />
   </div>
 </template>
 
 <script>
 import DisciplinaForm from '@/components/DisciplinaForm.vue'
 import Header from '@/components/Header.vue'
+import Footer from '@/components/Footer.vue'
 
 export default {
   name: 'AddDisciplinaPage',
   components: {
     DisciplinaForm,
-    Header
+    Header,
+    Footer
   },
   data: () => {
     return {
