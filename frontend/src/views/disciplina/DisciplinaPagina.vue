@@ -18,7 +18,7 @@
         </b-progress>
       </b-col>
     </b-row>
-    <div class="user-rating p-3 ">
+    <div v-if="n_avaliou_disciplina" class="user-rating p-3 ">
       <b-form-group label="Avalie essa disciplina!">
         <b-form-radio-group
           id="btn-radios-3"
@@ -28,6 +28,9 @@
           name="radio-btn-stacked"
         ></b-form-radio-group>
       </b-form-group>
+    </div>
+    <div v-else  class="user-rating p-3 ">
+      <p>Você já avaliou essa disciplina!</p>
     </div>
     <b-tabs card>
       <b-tab title="Comentários" active>
@@ -185,6 +188,7 @@ export default {
       adicionar_comentario: false,
       adicionar_link: false,
       adicionar_arquivo: false,
+      n_avaliou_disciplina: true,
       comentario: '',
       teste: '',
       avaliacao_erro: '',
@@ -301,6 +305,16 @@ export default {
         .then(response => {
           this.disciplina = response.data
         })
+    },
+    get_avaliou_disciplina: function () {
+      this.$http.get(this.$api_url + '/api/avaliou_disciplina/' + this.id_disciplina)
+        .then(response => {
+          if (response.data.status === 'avaliado') {
+            this.n_avaliou_disciplina = false
+          } else {
+            this.n_avaliou_disciplina = true
+          }
+        })
     }
   },
   watch: {
@@ -324,6 +338,7 @@ export default {
   },
   created () {
     this.id_disciplina = window.location.href.split('/').pop()
+    this.get_avaliou_disciplina()
     this.get_disciplina()
     this.get_comentarios()
     this.get_links()
