@@ -151,6 +151,7 @@
       </b-tab>
     </b-tabs>
   </b-container>
+  <Footer />
 </div>
 </template>
 
@@ -159,6 +160,7 @@ import CommentBox from '@/components/CommentBox.vue'
 import LinkBox from '@/components/LinkBox.vue'
 import FileBox from '@/components/FileBox.vue'
 import Header from '@/components/Header.vue'
+import Footer from '@/components/Footer.vue'
 
 export default {
   name: 'DisciplinaPagina',
@@ -166,7 +168,8 @@ export default {
     CommentBox,
     LinkBox,
     FileBox,
-    Header
+    Header,
+    Footer
   },
   data: () => {
     return {
