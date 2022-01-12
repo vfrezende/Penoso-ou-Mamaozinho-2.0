@@ -3,13 +3,14 @@
 #container{
   padding-top:15px;
   margin-top:20px;
+  width:100%;
   color:rgba(7, 7, 7, 0.699);
   background-color:#aca9a9;
   display:flex;
   flex-direction:column;
   align-items:center;
   position: fixed;
-	left: 50%;
+  bottom: 0;
 }
 #contacts{
   display:flex;
