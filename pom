@@ -2,6 +2,7 @@
 
 COMMAND=$1
 APP_BACKEND_DEV_NAME=pom-backend-dev
+APP_BACKEND_TEST_NAME=pom-backend-test
 APP_FRONTEND_DEV_NAME=pom-frontend-dev
 
 stop-backend() {
@@ -52,8 +53,30 @@ case $COMMAND in
                 -v $PWD:/app \
                 --rm \
                 --name=$APP_BACKEND_DEV_NAME \
+                --env TESTING=n \
                 $APP_BACKEND_DEV_NAME \
                 run --host 0.0.0.0 --port 5000
+        ;;
+    build-container-backend-tests | bc-backend-tests)
+        echo $APP_BACKEND_TEST_NAME" - Starting build..."
+        exec docker build \
+                --build-arg USER_ID=$(id -u ${USER}) \
+                --build-arg GROUP_ID=$(id -g ${USER}) \
+                -t $APP_BACKEND_TEST_NAME \
+                -f Dockerfile-backend-tests \
+                . 
+        echo $APP_BACKEND_TEST_NAME" - Build finished"
+        ;;
+    test-backend)
+        echo $APP_BACKEND_TEST_NAME" - Starting..."
+        exec docker run \
+                -t \
+                -v $PWD:/app \
+                --rm \
+                --name=$APP_BACKEND_TEST_NAME \
+                --env TESTING=y \
+                $APP_BACKEND_TEST_NAME \
+                $2
         ;;
     stop-backend)
         stop-backend true

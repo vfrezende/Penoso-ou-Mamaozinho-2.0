@@ -1,33 +1,21 @@
-from backend import db
+import os
+
 from backend.utils.utils import sanitizeString
-from backend.models import (
-    Arquivos,
-    Disciplinas,
-    Users,
-    Mamao,
-    Penoso,
-    Gostei,
-    NaoGostei,
-    Comentario,
-    Links,
-    DenunciaComentario
-)
-from backend.views import (
-    ArquivosInformacoes,
-    DisciplinasInformacoes,
-    ComentariosInformacoes,
-    LinksInformacoes,
-    AvaliacoesDisciplinas,
-    AvaliacoesComentario,
-)
+from backend.model import db, models
+
 import traceback
 from passlib.hash import sha256_crypt
 from io import BytesIO
 from base64 import b64decode
 
+if os.environ["TESTING"] == "n":
+    from backend.model import views
+else:
+    views = None
+
 
 def getDisciplinas():
-    disciplinas = Disciplinas.query.all()
+    disciplinas = models.Disciplinas.query.all()
     sorted_disciplinas = sorted(
         [d.serialize() for d in disciplinas], key=lambda x: x["nome"]
     )
@@ -35,7 +23,7 @@ def getDisciplinas():
 
 
 def getDisciplina(id_disciplina: int):
-    disciplina = DisciplinasInformacoes.query.filter_by(id=id_disciplina).first()
+    disciplina = views.DisciplinasInformacoes.query.filter_by(id=id_disciplina).first()
     return disciplina.serialize() if disciplina else {}
 
 
@@ -46,14 +34,14 @@ def cadastroUsuario(data):
     picture = data.get("picture", "")
     password = sha256_crypt.encrypt(str(data.get("password")))
 
-    r = Users.query.filter_by(username=username).first()
+    r = models.Users.query.filter_by(username=username).first()
     if r:
         return False, "Username já cadastrado"
-    r = Users.query.filter_by(email=email).first()
+    r = models.Users.query.filter_by(email=email).first()
     if r:
         return False, "Email já cadastrado"
 
-    novo_usuario = Users(
+    novo_usuario = models.Users(
         name=name, email=email, username=username, picture=picture, password=password
     )
     db.session.add(novo_usuario)
@@ -70,7 +58,7 @@ def getUsuario(**kwargs):
         return True, user_dict
     elif kwargs.get("id_user"):
         id_user = kwargs.get("id_user")
-        user = Users.query.filter_by(id=id_user).first()
+        user = models.Users.query.filter_by(id=id_user).first()
         if user:
             user_dict = user.serialize()
             user_dict["password"] = ""
@@ -82,7 +70,7 @@ def getUsuario(**kwargs):
 
 
 def checkUsuario(username, passwordEntered):
-    user = Users.query.filter_by(username=username).first()
+    user = models.Users.query.filter_by(username=username).first()
 
     if user:
         correctPassword = user.password
@@ -107,7 +95,7 @@ def updateUsuario(id_user, data):
         new_data.update({"password": sha256_crypt.encrypt(str(password))})
 
     try:
-        Users.query.filter_by(id=id_user).update(new_data)
+        models.Users.query.filter_by(id=id_user).update(new_data)
         db.session.commit()
         return True, None
 
@@ -118,16 +106,16 @@ def updateUsuario(id_user, data):
 def cadastroAvaliacaoDisciplina(categoria, id_disciplina, id_user):
     try:
         id_user = int(id_user)
-        r = AvaliacoesDisciplinas.query.filter_by(
+        r = views.AvaliacoesDisciplinas.query.filter_by(
             id_disciplina=id_disciplina, id_user=id_user
         ).first()
         if r:
             return False, "Voce ja avaliou essa disciplina"
 
         if categoria == "mamao":
-            nova_avaliacao = Mamao(id_disciplina=id_disciplina, id_user=id_user)
+            nova_avaliacao = models.Mamao(id_disciplina=id_disciplina, id_user=id_user)
         else:
-            nova_avaliacao = Penoso(id_disciplina=id_disciplina, id_user=id_user)
+            nova_avaliacao = models.Penoso(id_disciplina=id_disciplina, id_user=id_user)
 
         db.session.add(nova_avaliacao)
         db.session.commit()
@@ -141,16 +129,18 @@ def cadastroAvaliacaoDisciplina(categoria, id_disciplina, id_user):
 def cadastroAvaliacaoComentario(id_comentario, categoria, id_user):
     try:
         id_user = int(id_user)
-        r = AvaliacoesComentario.query.filter_by(
+        r = views.AvaliacoesComentario.query.filter_by(
             id_comentario=id_comentario, id_user=id_user
         ).first()
         if r:
             return False, "Voce ja avaliou esse comentario"
 
         if categoria == "gostei":
-            nova_avaliacao = Gostei(id_comentario=id_comentario, id_user=id_user)
+            nova_avaliacao = models.Gostei(id_comentario=id_comentario, id_user=id_user)
         else:
-            nova_avaliacao = NaoGostei(id_comentario=id_comentario, id_user=id_user)
+            nova_avaliacao = models.NaoGostei(
+                id_comentario=id_comentario, id_user=id_user
+            )
 
         db.session.add(nova_avaliacao)
         db.session.commit()
@@ -166,11 +156,13 @@ def cadastroDisciplina(nome, penoso_mamao, id_user):
         nome_limpo = " ".join([sanitizeString(x) for x in nome.split(" ")])
         id_user = int(id_user)
 
-        r = Disciplinas.query.filter_by(nome_limpo=nome_limpo).first()
+        r = models.Disciplinas.query.filter_by(nome_limpo=nome_limpo).first()
         if r:
             return False, "Disciplina ja cadastrada"
 
-        nova_disciplina = Disciplinas(id_user=id_user, nome=nome, nome_limpo=nome_limpo)
+        nova_disciplina = models.Disciplinas(
+            id_user=id_user, nome=nome, nome_limpo=nome_limpo
+        )
         db.session.add(nova_disciplina)
         db.session.commit()
         return cadastroAvaliacaoDisciplina(penoso_mamao, nova_disciplina.id, id_user)
@@ -183,7 +175,7 @@ def cadastroDisciplina(nome, penoso_mamao, id_user):
 def cadastroComentario(id_user, id_disciplina, texto):
     try:
         id_user = int(id_user)
-        novo_comentario = Comentario(
+        novo_comentario = models.Comentario(
             id_user=id_user, id_disciplina=id_disciplina, texto=texto
         )
         db.session.add(novo_comentario)
@@ -198,7 +190,7 @@ def cadastroComentario(id_user, id_disciplina, texto):
 def cadastroLink(id_user, id_disciplina, titulo, link):
     try:
         id_user = int(id_user)
-        novo_link = Links(
+        novo_link = models.Links(
             id_user=id_user, id_disciplina=id_disciplina, titulo=titulo, link=link
         )
         db.session.add(novo_link)
@@ -213,13 +205,13 @@ def cadastroLink(id_user, id_disciplina, titulo, link):
 def cadastro_arquivo(id_user, id_disciplina, nome, mimetype, descricao, dados):
     try:
         id_user = int(id_user)
-        novo_arquivo = Arquivos(
+        novo_arquivo = models.Arquivos(
             id_user=id_user,
             id_disciplina=id_disciplina,
             nome=nome.strip(),
             mimetype=mimetype,
             descricao=descricao,
-            dados=dados.encode("ascii")
+            dados=dados.encode("ascii"),
         )
         db.session.add(novo_arquivo)
         db.session.commit()
@@ -232,11 +224,11 @@ def cadastro_arquivo(id_user, id_disciplina, nome, mimetype, descricao, dados):
 
 def getComentarios(id_disciplina=None):
     if id_disciplina:
-        comentarios = ComentariosInformacoes.query.filter_by(
+        comentarios = views.ComentariosInformacoes.query.filter_by(
             id_disciplina=id_disciplina
         ).all()
     else:
-        comentarios = ComentariosInformacoes.query.all()
+        comentarios = views.ComentariosInformacoes.query.all()
 
     if comentarios:
         sort_comentarios = sorted(
@@ -251,9 +243,11 @@ def getComentarios(id_disciplina=None):
 
 def getLinks(id_disciplina=None):
     if id_disciplina:
-        links = LinksInformacoes.query.filter_by(id_disciplina=id_disciplina).all()
+        links = views.LinksInformacoes.query.filter_by(
+            id_disciplina=id_disciplina
+        ).all()
     else:
-        links = LinksInformacoes.query.all()
+        links = views.LinksInformacoes.query.all()
 
     if links:
         sorted_links = sorted(
@@ -267,7 +261,9 @@ def getLinks(id_disciplina=None):
 
 
 def get_arquivos_informacoes(id_disciplina: int):
-    arquivos = ArquivosInformacoes.query.filter_by(id_disciplina=id_disciplina).all()
+    arquivos = views.ArquivosInformacoes.query.filter_by(
+        id_disciplina=id_disciplina
+    ).all()
     if arquivos:
         return sorted(
             [arquivo.serialize() for arquivo in arquivos], key=lambda x: x["id_arquivo"]
@@ -276,7 +272,7 @@ def get_arquivos_informacoes(id_disciplina: int):
 
 
 def get_arquivo(id_arquivo: int):
-    arquivo = Arquivos.query.filter_by(id=id_arquivo).first()
+    arquivo = models.Arquivos.query.filter_by(id=id_arquivo).first()
     if arquivo:
         serialized_arquivo = arquivo.serialize()
         serialized_arquivo["dados"] = BytesIO(b64decode(serialized_arquivo["dados"]))
@@ -287,7 +283,7 @@ def get_arquivo(id_arquivo: int):
 def getTopDisciplinas(n, categoria):
     TIPOS = ["mamao", "penoso"]
 
-    disciplinas = DisciplinasInformacoes.query.all()
+    disciplinas = views.DisciplinasInformacoes.query.all()
     disciplinas = [d.serialize() for d in disciplinas]
 
     if categoria not in TIPOS:
@@ -311,7 +307,7 @@ def getTopDisciplinas(n, categoria):
 def deletarComentario(id_comentario, username):
 
     try:
-        r = ComentariosInformacoes.query.filter_by(
+        r = views.ComentariosInformacoes.query.filter_by(
             id_comentario=id_comentario, username=username
         ).first()
 
@@ -320,10 +316,10 @@ def deletarComentario(id_comentario, username):
             return False, "Voce nao escreveu este comentario"
 
         else:
-            Gostei.query.filter_by(id_comentario=id_comentario).delete()
-            NaoGostei.query.filter_by(id_comentario=id_comentario).delete()
+            models.Gostei.query.filter_by(id_comentario=id_comentario).delete()
+            models.NaoGostei.query.filter_by(id_comentario=id_comentario).delete()
 
-            Comentario.query.filter_by(id=id_comentario).delete()
+            models.Comentario.query.filter_by(id=id_comentario).delete()
             db.session.commit()
 
             return True, "Comentario removido com sucesso"
@@ -333,49 +329,54 @@ def deletarComentario(id_comentario, username):
         return False, "ocorreu um erro enquanto processava"
 
 
-
-
 def denunciarComentario(id_comentario, id_user):
 
     try:
         id_user = int(id_user)
-        r = DenunciaComentario.query.filter_by(
+        r = models.DenunciaComentario.query.filter_by(
             id_comentario=id_comentario, id_user=id_user
         ).first()
 
         if r:
             return False, "Voce ja denunciou este comentario"
         else:
-            nova_denuncia = DenunciaComentario(
-                id_comentario=id_comentario, id_user=id_user)
+            nova_denuncia = models.DenunciaComentario(
+                id_comentario=id_comentario, id_user=id_user
+            )
 
             db.session.add(nova_denuncia)
-            db.session.commit()            
-            denuncias = DenunciaComentario.query.filter_by(
-            id_comentario=id_comentario).all()
+            db.session.commit()
+            denuncias = models.DenunciaComentario.query.filter_by(
+                id_comentario=id_comentario
+            ).all()
 
-            if(len(denuncias) >=5):
-                
-                Gostei.query.filter_by(id_comentario=id_comentario).delete()
-                NaoGostei.query.filter_by(id_comentario=id_comentario).delete()
-                Comentario.query.filter_by(id=id_comentario).delete()
-                db.session.commit()            
-                
+            if len(denuncias) >= 5:
+
+                models.Gostei.query.filter_by(id_comentario=id_comentario).delete()
+                models.NaoGostei.query.filter_by(id_comentario=id_comentario).delete()
+                models.Comentario.query.filter_by(id=id_comentario).delete()
+                db.session.commit()
+
             return True, None
 
     except Exception as e:
         print(e)
         return False, "ocorreu um erro enquanto processava"
 
+
 def getAvaliouDisciplina(id_disciplina, id_user):
-    
+
     try:
         id_user = int(id_user)
         id_disciplina = int(id_disciplina)
-        penoso = Penoso.query.filter_by(id_disciplina=id_disciplina, id_user=id_user).first()
-        mamao = Mamao.query.filter_by(id_disciplina=id_disciplina, id_user=id_user).first()
-  
-        if(penoso or mamao):
+        penoso = models.Penoso.query.filter_by(
+            id_disciplina=id_disciplina, id_user=id_user
+        ).first()
+        mamao = models.Mamao.query.filter_by(
+            id_disciplina=id_disciplina, id_user=id_user
+        ).first()
+
+        if penoso or mamao:
             return {"status": "avaliado"}
         else:
             return {"status": "não avaliado"}
@@ -383,7 +384,3 @@ def getAvaliouDisciplina(id_disciplina, id_user):
     except Exception as e:
         print(e)
         return False, "ocorreu um erro enquanto processava"
-
-
-    
-    
