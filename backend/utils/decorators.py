@@ -1,5 +1,5 @@
 from backend.utils.utils import serialization_function
-from flask import session, redirect, url_for
+import flask
 from functools import wraps
 
 
@@ -11,9 +11,8 @@ def serializable_class(cls: object) -> object:
 def is_logged_in(func):
     @wraps(func)
     def wrap(*args, **kwargs):
-        if "logged_in" in session or True:
+        if flask.session.get("logged_in"):
             return func(*args, **kwargs)
         else:
-            return redirect(url_for("login"))
-
+            return flask.redirect(flask.url_for("views.views-usuarios.login"))
     return wrap

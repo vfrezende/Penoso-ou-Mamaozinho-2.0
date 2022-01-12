@@ -21,14 +21,13 @@ USER pomuser
 
 ENV FLASK_ENV development
 
-COPY ./requirements.txt ./app/
-RUN pip install --no-cache-dir -r app/requirements.txt
+COPY ./requirements-tests.txt ./app/
+RUN pip install --no-cache-dir -r app/requirements-tests.txt
 
 WORKDIR /app
 
-ENV TESTING n
 ENV PATH /home/pomuser/.local/bin:$PATH
+ENV TESTING y
+ENV PYTHONPATH /app
 
-CMD ["run", "--host", "0.0.0.0"]
-
-ENTRYPOINT ["flask"]
+ENTRYPOINT ["pytest"]
