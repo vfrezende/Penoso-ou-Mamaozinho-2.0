@@ -68,6 +68,17 @@ module.exports = {
       // when using title option,
       // template title tag needs to be <title><%= htmlWebpackPlugin.options.title %></title>
       title: 'Adicionar Disciplina Page'
+    },
+    unauthorized: {
+      // entry for the page
+      entry: 'src/views/unauthorized/unauthorized.js',
+      // the source template
+      template: 'public/unauthorized.html',
+      // output as dist/index.html
+      filename: 'unauthorized.html',
+      // when using title option,
+      // template title tag needs to be <title><%= htmlWebpackPlugin.options.title %></title>
+      title: 'Unauthorized Page'
     }
   }
 }
