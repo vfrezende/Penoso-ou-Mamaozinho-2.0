@@ -5,6 +5,7 @@ from backend.api import (
     cadastroAvaliacaoComentario,
     deletarComentario,
     cadastroComentario,
+    denunciarComentario,
 )
 from backend.routes import get_blueprint_name, API_BASE_NAME
 from backend.utils.decorators import is_logged_in
@@ -64,6 +65,21 @@ def apiCadastroComentario():
     id_user = session.get("id")
 
     success, message = cadastroComentario(id_user, id_disciplina, comentario)
+    if success:
+        return success_response()
+    else:
+        return error_response(message)
+
+
+@api_comentarios_blueprint.route("/api/cadastro/denunciar_comentario", methods=["POST"])
+@is_logged_in
+def apiDenunciarComentario():
+    r = request.get_json()
+
+    id_comentario = r.get("id_comentario")
+    id_user = session.get("id")
+
+    success, message = denunciarComentario(id_comentario, id_user)
     if success:
         return success_response()
     else:

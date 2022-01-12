@@ -6,6 +6,7 @@ from backend.api import (
     getTopDisciplinas,
     cadastroDisciplina,
     cadastroAvaliacaoDisciplina,
+    getAvaliouDisciplina,
 )
 from backend.routes import get_blueprint_name, API_BASE_NAME
 from backend.utils.decorators import is_logged_in
@@ -67,3 +68,11 @@ def apiCadastroAvaliacaoDisciplina():
         return success_response()
     else:
         return error_response(message)
+
+
+@api_disciplinas_blueprint.route("/api/avaliou_disciplina/<int:id_disciplina>")
+@is_logged_in
+def apiAvaliouDisciplina(id_disciplina):
+    id_user = session.get("id")
+    r = getAvaliouDisciplina(id_disciplina, id_user)
+    return jsonify(r)

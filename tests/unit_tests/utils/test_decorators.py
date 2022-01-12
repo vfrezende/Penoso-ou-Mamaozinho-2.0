@@ -3,7 +3,7 @@ from mock import patch, MagicMock
 from unittest import TestCase
 
 LOGGED_IN = "logged_in"
-PAGE_TO_REDIRECT = "views.views-usuarios.login"
+PAGE_TO_REDIRECT = "views.views-home.unauthorized"
 
 
 @patch("backend.utils.decorators.flask")
