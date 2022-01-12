@@ -10,9 +10,14 @@ home_blueprint = Blueprint(
 
 @home_blueprint.route("/")
 def index():
-    return redirect(url_for(f"{HOME_BLUEPRINT_NAME}.home"))
+    return redirect(url_for("views.views-home.home"))
 
 
 @home_blueprint.route("/home")
 def home():
     return render_template("home.html")
+
+
+@home_blueprint.route("/unauthorized")
+def unauthorized():
+    return render_template("unauthorized.html")
