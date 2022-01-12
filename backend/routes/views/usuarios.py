@@ -27,4 +27,4 @@ def login():
 @is_logged_in
 def logout():
     session.clear()
-    return redirect(url_for("home"))
+    return redirect(url_for("views.views-home.home"))
