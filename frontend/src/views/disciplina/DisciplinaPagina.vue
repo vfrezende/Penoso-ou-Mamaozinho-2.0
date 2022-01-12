@@ -19,7 +19,7 @@
       </b-col>
     </b-row>
     <div v-if="n_avaliou_disciplina" class="user-rating p-3 ">
-      <b-form-group label="Avalie essa disciplina!">
+      <b-form-group :label=" ((disciplina.num_mamao + disciplina.num_penoso) < 2) ? 'Seja um dos primeiros a avaliar' : 'Avalie essa disciplina!'">
         <b-form-radio-group
           id="btn-radios-3"
           v-model="selected"
@@ -41,9 +41,9 @@
             <b-button pill variant="success" class="btn text-center" @click="cadastrar_comentario">Enviar</b-button>
           </div>
           <div v-else>
-            <b-button pill variant="success" class="btn text-center" @click="adicionar_comentario = !adicionar_comentario">Adicionar comentário</b-button>
+            <b-button v-if="comments.length === 0" pill variant="success" class="btn text-center" @click="adicionar_comentario = !adicionar_comentario">Seja o Primeiro a comentar</b-button>
+            <b-button v-else pill variant="success" class="btn text-center" @click="adicionar_comentario = !adicionar_comentario">Adicionar Comentário</b-button>
           </div>
-
           <div class="comment_form" v-show="adicionar_comentario">
             <b-form-textarea
               id="textarea"
@@ -174,7 +174,7 @@ export default {
   data: () => {
     return {
       id_disciplina: '',
-      disciplina: '',
+      disciplina: { num_mamao: 0, num_penoso: 0 },
       comments: [],
       links: [],
       arquivos: [],
