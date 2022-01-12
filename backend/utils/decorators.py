@@ -14,5 +14,5 @@ def is_logged_in(func):
         if flask.session.get("logged_in"):
             return func(*args, **kwargs)
         else:
-            return flask.redirect(flask.url_for("views.views-usuarios.login"))
+            return flask.redirect(flask.url_for("views.views-home.unauthorized"))
     return wrap

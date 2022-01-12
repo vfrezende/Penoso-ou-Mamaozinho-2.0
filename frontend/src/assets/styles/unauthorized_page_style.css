@@ -1,0 +1,11 @@
+.container {
+    margin: 10vh auto;
+    text-align: center;
+}
+.main-image {
+    padding: 5vh;
+}
+a.message {
+    color: #EF3B3A;
+    text-decoration: none;
+}
