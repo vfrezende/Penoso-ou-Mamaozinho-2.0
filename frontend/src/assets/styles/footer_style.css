@@ -1,15 +1,15 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
 
 #container{
-  padding-top:20px;
+  padding-top:15px;
   margin-top:20px;
-  width:100vw;
   color:rgba(7, 7, 7, 0.699);
   background-color:#aca9a9;
   display:flex;
   flex-direction:column;
   align-items:center;
   position: fixed;
+	left: 50%;
 }
 #contacts{
   display:flex;
@@ -30,7 +30,7 @@
   border-radius: 30%;
 }
 #mentions p {
-  font-size:0.5em;
+  font-size:0.8em;
 }
 .fa {
   padding: 15px;
