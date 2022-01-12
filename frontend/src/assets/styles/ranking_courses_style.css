@@ -7,6 +7,7 @@ overflow: hidden;
 
 .table_ranking {
 padding: 50px 100px;
+z-index:10;
 }
 .table_ranking .ranking {
 background-color: white;
@@ -142,6 +143,7 @@ body {
 }
 .table_ranking .ranking {
     width: 100%;
+    
 }
 
 .na {
