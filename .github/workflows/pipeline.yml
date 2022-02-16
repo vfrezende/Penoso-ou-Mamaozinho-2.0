@@ -31,7 +31,6 @@ jobs:
           # Used to specify the path to dependency files. Supports wildcards or a list of file names for caching multiple dependencies.
             cache-dependency-path: '${{ github.workspace }}/requirements.txt'
       
-
       - name: Setup Node
         uses: actions/setup-node@v2.5.0
         with:
@@ -46,9 +45,7 @@ jobs:
       - run:  |
           echo "Configurando conexao com o banco de dados"
           cd ${{github.workspace}}
-          echo "SECRET_KEY=mysecretkey123">>.env 
-          echo ${{secrets.BD}}>>.env
-        
+          echo ${{secrets.endpoint_db}}>>.env
       - run: |
           echo "Buildando Backend"
           cd ${{github.workspace}}
@@ -56,7 +53,18 @@ jobs:
           source venv/bin/activate
           pip install --upgrade pip
           pip install -r requirements.txt
-          
+      - run: | 
+          echo "Rodando testes de unidade 👨🏻‍🔧"
+          source venv/bin/activate
+          pip install -r requirements-tests.txt
+          cp tests/unit_tests/test_api.py .
+          export TESTING=y
+          export FLASK_ENV=development
+          pytest test_api.py
+
+
+
+    
           
 
 
