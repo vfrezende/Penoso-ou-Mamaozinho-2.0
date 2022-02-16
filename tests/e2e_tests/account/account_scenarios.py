@@ -1,10 +1,9 @@
 from dataclasses import asdict
 from selenium.webdriver.common.by import By
-from tests.e2e_tests.test_utils import User
 
 from tests.e2e_tests.base_scenario import BaseScenario
 from tests.e2e_tests.helpers.database import DatabaseHelper
-from tests.e2e_tests.test_utils import Paths, build_random_string_with_prefix, build_random_string_with_suffix
+from tests.e2e_tests.test_utils import Paths
 
 SUCCESS_MESSAGE = "Registrado com Sucesso!"
 EMAIL_ALREADY_REGISTERED_MESSAGE = "Email já cadastrado"
@@ -28,22 +27,10 @@ class AccountScenarios(BaseScenario):
 
     # Given
     def user_has_valid_credentials(self):
-        self.user = User(
-            name=build_random_string_with_prefix('name'),
-            email=build_random_string_with_suffix('@email.com'),
-            username=build_random_string_with_prefix('username'),
-            password=build_random_string_with_prefix('password'),
-            picture=self._build_random_url(),
-        )
+        self.user = self.build_random_user()
 
     def there_is_a_user_with_the_same_email(self):
-        self.aux_user = User(
-            name=build_random_string_with_prefix('name'),
-            email=self.user.email,
-            username=build_random_string_with_prefix('username'),
-            password=build_random_string_with_prefix('password'),
-            picture=self._build_random_url(),
-        )
+        self.aux_user = self.build_random_user(email=self.user.email)
         self.db_helper.create_account(self.aux_user)
 
     # When
@@ -83,10 +70,6 @@ class AccountScenarios(BaseScenario):
         received_user = self.db_helper.get_account(self.user.username)
 
         self.assert_equal(received_user, None)
-
-    # Utils
-    def _build_random_url(self) -> str:
-        return f'https://{build_random_string_with_prefix("url")}.com'
 
     # Scenario
     def clean_up(self):

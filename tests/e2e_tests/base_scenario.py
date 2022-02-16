@@ -1,6 +1,9 @@
 from time import sleep
 from selenium import webdriver
 
+from tests.e2e_tests.test_utils import User, build_random_string_with_prefix,\
+    build_random_string_with_suffix
+
 # Must use the host IP from docker network
 BASE_URL = 'http://localhost:5000'
 A_FEW_SECONDS = 5
@@ -25,3 +28,17 @@ class BaseScenario:
     @staticmethod
     def wait_a_few_seconds():
         sleep(A_FEW_SECONDS)
+
+    @staticmethod
+    def build_random_user(email: str = build_random_string_with_suffix('@email.com')):
+        return User(
+            name=build_random_string_with_prefix('name'),
+            email=email,
+            username=build_random_string_with_prefix('username'),
+            password=build_random_string_with_prefix('password'),
+            picture=BaseScenario.build_random_url(),
+        )
+
+    @staticmethod
+    def build_random_url() -> str:
+        return f'https://{build_random_string_with_prefix("url")}.com'
