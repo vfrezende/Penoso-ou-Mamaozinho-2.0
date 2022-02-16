@@ -26,6 +26,7 @@ pyflakes==2.4.0
 pytest==6.2.5
 python-dotenv==0.19.1
 regex==2021.10.23
+selenium==4.1.0
 six==1.16.0
 SQLAlchemy==1.4.26
 tomli==1.2.2
